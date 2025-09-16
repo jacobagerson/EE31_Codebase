@@ -8,7 +8,7 @@ void setup() {
 
   digitalWrite(4, HIGH); //Set enable high
   digitalWrite(6, LOW);
-  analogWrite(5, 260);
+  analogWrite(5, 250);
 }
 
 void loop() {
