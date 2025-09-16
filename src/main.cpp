@@ -1,5 +1,19 @@
 #include <Arduino.h>
 
+typedef enum { 
+  START, 
+  firstWALL,
+  findCOLOR_X,
+  laneFOLLOW_X,
+  findCOLOR_Y,
+  laneFOLLOW_Y,
+  findSTART 
+} State;
+
+State currentState = START;
+
+
+
 void setup() {
   // put your setup code here, to run once:
   pinMode(4, OUTPUT);
@@ -13,4 +27,38 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  switch (currentState){
+  case START:
+    
+    break;
+  
+  case firstWALL:
+
+    break;
+
+  case findCOLOR_X:
+
+    break;
+
+  case laneFOLLOW_X:
+
+    break;
+
+  case findCOLOR_Y:
+
+    break;
+  
+  case laneFOLLOW_Y:
+
+    break;
+
+  case findSTART:
+
+    break;
+
+  default:
+    currentState = START;
+    break;
+  }
+
 }
