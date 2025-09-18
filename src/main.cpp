@@ -1,4 +1,4 @@
-#include <Arduino.h>
+#include "main.h"
 
 typedef enum { 
   START, 
@@ -16,49 +16,56 @@ State currentState = START;
 
 void setup() {
   // put your setup code here, to run once:
-  pinMode(4, OUTPUT);
-  pinMode(5, OUTPUT);
-  pinMode(6, OUTPUT);
+    pinMode(4, OUTPUT);
+    pinMode(5, OUTPUT);
+    pinMode(6, OUTPUT);
 
-  digitalWrite(4, HIGH); //Set enable high
-  digitalWrite(6, LOW);
-  analogWrite(5, 250);
+    digitalWrite(4, HIGH); //Set enable high
+    digitalWrite(6, LOW);
+    analogWrite(5, 250);
+    
+    //start websocket up 
+    setupSocket();
+    // String message = readMessage();
+    // Serial.println(message);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  switch (currentState){
-  case START:
+    // writeMessage("test message");
+    // delay(1000);
+    // // put your main code here, to run repeatedly:
+    // switch (currentState){
+    // case START:
+        
+    //     break;
     
-    break;
-  
-  case firstWALL:
+    // case firstWALL:
 
-    break;
+    //     break;
 
-  case findCOLOR_X:
+    // case findCOLOR_X:
 
-    break;
+    //     break;
 
-  case laneFOLLOW_X:
+    // case laneFOLLOW_X:
 
-    break;
+    //     break;
 
-  case findCOLOR_Y:
+    // case findCOLOR_Y:
 
-    break;
-  
-  case laneFOLLOW_Y:
+    //     break;
+    
+    // case laneFOLLOW_Y:
 
-    break;
+    //     break;
 
-  case findSTART:
+    // case findSTART:
 
-    break;
+    //     break;
 
-  default:
-    currentState = START;
-    break;
-  }
+    // default:
+    //     currentState = START;
+    //     break;
+    // }
 
 }
