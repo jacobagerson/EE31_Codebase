@@ -19,6 +19,7 @@ void setup() {
     pinMode(4, OUTPUT);
     pinMode(5, OUTPUT);
     pinMode(6, OUTPUT);
+    // pinMode(A0, INPUT_PULLUP);
 
     digitalWrite(4, HIGH); //Set enable high
     digitalWrite(6, LOW);
@@ -26,11 +27,39 @@ void setup() {
     
     //start websocket up 
     setupSocket();
+
     // String message = readMessage();
-    // Serial.println(message);
+    // while(1){
+    //     String message = readMessage();
+    //     if(message.length() > 0){
+    //         Serial.println(message);
+    //         message.remove(0, 10);
+    //         String id = parseID(message);
+    //         Serial.println(id);
+    //         String sent = getMessage(message);
+    //         Serial.println("message = " + sent);
+
+    //         if(id == "8050D1451904"){
+    //             Serial.println("Our ID");
+    //         }
+    //         else Serial.println("not our id");
+    //         //String nMessage = parseID(message);
+    //         // Serial.println(nMessage);
+    //     }
+            
+
+    
 }
 
 void loop() {
+
+    //Serial.println("inside loop");
+
+    // ir_read();
+    float value = analogRead(A0);
+    Serial.println(value);
+    delay(200);
+    
     // writeMessage("test message");
     // delay(1000);
     // // put your main code here, to run repeatedly:

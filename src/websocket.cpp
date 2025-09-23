@@ -19,21 +19,28 @@ void writeMessage(String message){
     Serial.println(message);
 }
 
-
-void readMessageType(){
-
-
-
-
-}
-
 String readMessage(){
     String response;
     if(client.connected()){
+        client.parseMessage();
         response = client.readString();
     }
-    Serial.println(response);
     return response;
+}
+
+String parseID(String message){
+    String result;
+    for(int i = 0; i < 12; i++){
+        result += message[i];
+    }
+    return result;
+}
+
+String getMessage(String message){
+    while(message[0] != '.')
+        message.remove(0,1);
+    message.remove(0,1);
+    return message;
 }
 
 void setupSocket(){
@@ -62,14 +69,4 @@ void setupSocket(){
     client.endMessage();
 
     Serial.println("Done starting websocket");
-
-
-    client.beginMessage(TYPE_TEXT);
-    client.print("test read");
-    client.endMessage();
-    
-    client.parseMessage();
-    String response = client.readString();
-    Serial.println("response = " + response);
-
 }
