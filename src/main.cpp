@@ -15,18 +15,15 @@ State currentState = START;
 
 
 void setup() {
-  // put your setup code here, to run once:
-    pinMode(4, OUTPUT);
-    pinMode(5, OUTPUT);
-    pinMode(6, OUTPUT);
-    // pinMode(A0, INPUT_PULLUP);
+	//initialize serial monitor
+    Serial.begin(9600);
 
-    digitalWrite(4, HIGH); //Set enable high
-    digitalWrite(6, LOW);
-    analogWrite(5, 250);
-    
-    //start websocket up 
-    setupSocket();
+	//initialize motor pins
+	setupMotorPins();
+
+
+	//start websocket up
+    //setupSocket();
 
     // String message = readMessage();
     // while(1){
@@ -46,8 +43,6 @@ void setup() {
     //         //String nMessage = parseID(message);
     //         // Serial.println(nMessage);
     //     }
-            
-
     
 }
 
@@ -55,11 +50,18 @@ void loop() {
 
     //Serial.println("inside loop");
 
-    // ir_read();
-    float value = analogRead(A0);
-    Serial.println(value);
+    //Serial.println(value);
+    Serial.println(ir_read());
     delay(200);
-    
+
+	if (ir_read() < 700) {
+		leftMotorForward(150);
+		rightMotorForward(150);
+	} else {
+		leftMotorStop();
+		rightMotorStop();
+	}
+
     // writeMessage("test message");
     // delay(1000);
     // // put your main code here, to run repeatedly:

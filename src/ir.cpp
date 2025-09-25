@@ -1,6 +1,15 @@
-// #include "ir.h"
+#include "ir.h"
 
-// void ir_read() {    
-//     Serial.println(analogRead(3));
-//     Serial.println("Hi");
+float ir_read() {
+   float value = analogRead(A0);
+   return value;
+}
+
+// int ir_proximity(float ir_value) {
+//    if (ir_value > 700) {
+//      return 1; // Object is close
+//    } else {
+//      return 0; // No object detected
+//    }
 // }
+
