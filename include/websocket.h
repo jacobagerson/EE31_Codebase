@@ -8,6 +8,7 @@
 #include "WebSocketClient.h"
 #include <ArduinoHttpClient.h>
 #include <WiFiNINA.h>
+#include <Arduino.h>
 
 void writeMessage(String message);
 String readMessage();
