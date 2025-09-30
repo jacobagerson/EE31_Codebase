@@ -65,13 +65,20 @@ void setRSpeed(uint8_t speed){
     r_speed = speed; 
 }
 
-//line following
- 
-//speed = (Vl + Vr) / 2
-//doing discrete sampling instead of continuous since we can only sample at a limited rate
-//color sensors on both sides of the chassey, width = width of channel
+//color sensors on both sides of the chassey, width = little less than width of channel
 
 void correctLine(int lColor, int rColor){
+    //color values = ???
+    //if L is on black, turn bot right until not on black
+    // Turn L speed up, turn R speed down
+    //if R is on black, turn bot left until not on black
+    // Turn L speed down, turn R speed up
+
+
+    //make these changes and then call color sensing function again
+    //run this until neither on black
+
+
 
 
 }
