@@ -1,10 +1,12 @@
 #include <Arduino.h>
 
 void setupMotorPins();
-void leftMotorForward(int speed);
-void rightMotorForward(int speed);
-void leftMotorBackward(int speed);
-void rightMotorBackward(int speed);
+void leftMotorForward();
+void rightMotorForward();
+void leftMotorBackward();
+void rightMotorBackward();
 void leftMotorStop();
 void rightMotorStop();
 void motorsStop();
+void setLSpeed (uint8_t speed);
+void setRSpeed (uint8_t speed);
