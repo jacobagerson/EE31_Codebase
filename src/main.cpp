@@ -21,6 +21,9 @@ void setup() {
 	//initialize motor pins
 	setupMotorPins();
 
+    //initializing interrupt wit IR sensor:
+    
+
 
 	//start websocket up
     //setupSocket();
