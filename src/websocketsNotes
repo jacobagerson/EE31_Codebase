@@ -1,0 +1,21 @@
+Websocket Workshop
+
+Use to communicate between bots and server
+    can use it in joint demo to tell other bot that you're done and can start
+Websocket URL: tinyurl.com/tuftsee31
+
+In chrome:
+    disable HTTPS
+    visit: chrome://net-internals/#hsts
+    delete: www.eecs.tufts.edu
+    Try visiting client at: tinyurl.com/tuftsee31
+Team ID: 8050D1451904
+New ID: MACJONES1050
+
+Have to connect to tufts_eecs wifi
+    password: foundedin1883
+
+To see your own messages
+    Can open up a new window and see your teammates messages
+    messages aren't saved, 
+
