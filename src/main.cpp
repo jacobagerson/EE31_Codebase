@@ -22,11 +22,30 @@ void setup() {
 	setupMotorPins();
 
     //initializing interrupt wit IR sensor:
-    
+    setupIRInterrupt(2);
 
 
 	//start websocket up
-    setupSocket();
+    //setupSocket();
+
+    // String message = readMessage();
+    // while(1){
+    //     String message = readMessage();
+    //     if(message.length() > 0){
+    //         Serial.println(message);
+    //         message.remove(0, 10);
+    //         String id = parseID(message);
+    //         Serial.println(id);
+    //         String sent = getMessage(message);
+    //         Serial.println("message = " + sent);
+
+    //         if(id == "8050D1451904"){
+    //             Serial.println("Our ID");
+    //         }
+    //         else Serial.println("not our id");
+    //         //String nMessage = parseID(message);
+    //         // Serial.println(nMessage);
+    //     }
     
 }
 
@@ -39,15 +58,23 @@ void loop() {
     delay(200);
 
 	if (ir_read() < 700) {
-        setLSpeed(150);
-        setRSpeed(150);
-		leftMotorForward();
-		rightMotorForward();
+		leftMotorForward(150);
+		rightMotorForward(150);
 	} else {
 		leftMotorStop();
 		rightMotorStop();
 	}
 
+    float val = ir_read();
+    Serial.print("Analong IR: ");
+    Serial.print(val);
+
+    if (checkIrTriggered()) {
+        Serial.println("wall detected");
+    }
+
+    // writeMessage("test message");
+    // delay(1000);
     // // put your main code here, to run repeatedly:
     // switch (currentState){
     // case START:
