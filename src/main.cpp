@@ -22,7 +22,7 @@ void setup() {
 	setupMotorPins();
 
     //initializing interrupt wit IR sensor:
-    
+    setupIRInterrupt(2);
 
 
 	//start websocket up
@@ -64,6 +64,14 @@ void loop() {
 		leftMotorStop();
 		rightMotorStop();
 	}
+
+    float val = ir_read();
+    Serial.print("Analong IR: ");
+    Serial.print(val);
+
+    if (checkIrTriggered()) {
+        Serial.println("wall detected");
+    }
 
     // writeMessage("test message");
     // delay(1000);
