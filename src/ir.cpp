@@ -11,18 +11,26 @@ void irISR() {
    irTriggered = true;
 }
 
-void setupIRInterrupt(int pin) {
-   pinMode(pin, INPUT);
-   attachInterrupt(digitalPinToInterrupt(pin), irISR, RISING);
+bool wall_close(float ir_read) {
+   if (ir_read > 700) {
+      return true;
+   } else {
+      return false;
+   }
 }
 
-bool checkIrTriggered() {
-   if (irTriggered) {
-      irTriggered = false; // reset
-      return true;
-   }
-   return false;
-}
+// void setupIRInterrupt(int pin) {
+//    pinMode(pin, INPUT);
+//    attachInterrupt(digitalPinToInterrupt(pin), irISR, CHANGE);
+// }
+
+// bool checkIrTriggered() {
+//    if (irTriggered) {
+//       irTriggered = false; // reset
+//       return true;
+//    }
+//    return false;
+// }
 
 // int ir_proximity(float ir_value) {
 //    if (ir_value > 700) {

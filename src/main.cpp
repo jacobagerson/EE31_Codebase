@@ -21,9 +21,6 @@ void setup() {
 	//initialize motor pins
 	setupMotorPins();
 
-    //initializing interrupt wit IR sensor:
-    setupIRInterrupt(2);
-
 
 	//start websocket up
     //setupSocket();
@@ -51,26 +48,21 @@ void setup() {
 
 void loop() {
 
-    //Serial.println("inside loop");
+	// if (ir_read() < 700) {
+	// 	leftMotorForward(150);
+	// 	rightMotorForward(150);
+	// } else {
+	// 	leftMotorStop();
+	// 	rightMotorStop();
+	// }
 
-    //Serial.println(value);
-    Serial.println(ir_read());
-    delay(200);
-
-	if (ir_read() < 700) {
-		leftMotorForward(150);
-		rightMotorForward(150);
-	} else {
-		leftMotorStop();
-		rightMotorStop();
-	}
-
-    float val = ir_read();
-    Serial.print("Analong IR: ");
-    Serial.print(val);
-
-    if (checkIrTriggered()) {
+    // float val = ir_read();
+    // Serial.print("Analong IR: ");
+    // Serial.print(val);
+    if (wall_close(ir_read()))
+    {
         Serial.println("wall detected");
+        motorsStop();
     }
 
     // writeMessage("test message");

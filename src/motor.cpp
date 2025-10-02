@@ -19,12 +19,7 @@ void setupMotorPins() {
 void leftMotorForward() { //Speed 0-255
     digitalWrite(4, HIGH); //Set enable high
     digitalWrite(6, LOW); //Set reference low
-<<<<<<< HEAD
-    analogWrite(5, speed);
-
-=======
     analogWrite(5, l_speed);
->>>>>>> 9727ebd1abf6815099971682820432105eebac24
 }
 
 void rightMotorForward() { //Speed 0-255
