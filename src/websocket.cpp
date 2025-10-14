@@ -10,39 +10,6 @@ String clientID = "8050D1451904"; //Insert your Server ID Here!
 int status = WL_IDLE_STATUS;
 int count = 0;
 
-void writeMessage(String message){
-    if(client.connected()){
-        client.beginMessage(TYPE_TEXT);
-        client.print(message);
-        client.endMessage();
-    }
-    Serial.println(message);
-}
-
-String readMessage(){
-    String response;
-    if(client.connected()){
-        client.parseMessage();
-        response = client.readString();
-    }
-    return response;
-}
-
-String parseID(String message){
-    String result;
-    for(int i = 0; i < 12; i++){
-        result += message[i];
-    }
-    return result;
-}
-
-String getMessage(String message){
-    while(message[0] != '.')
-        message.remove(0,1);
-    message.remove(0,1);
-    return message;
-}
-
 void setupSocket(){
     
     while ( status != WL_CONNECTED) {
@@ -70,3 +37,45 @@ void setupSocket(){
 
     Serial.println("Done starting websocket");
 }
+
+void writeMessage(String message){
+    if(client.connected()){
+        client.beginMessage(TYPE_TEXT);
+        client.print(message);
+        client.endMessage();
+    }
+    //Serial.println(message);
+}
+
+String readMessage(){
+    String response;
+    if(client.connected()){
+        client.parseMessage();
+        response = client.readString();
+    }
+    return response;
+}
+
+String parseID(String message){
+    String result;
+    String temp = message.substring(0, 3);
+    if(temp == "Web"){
+        message.remove(0,3);
+        while(message[0] != '_'){
+            message.remove(0,1);
+        }
+        message.remove(0,1);
+    }
+    for(int i = 0; i < 12; i++){
+        result += message[i];
+    }
+    return result;
+}
+
+String getMessage(String message){
+    while(message[0] != '.')
+        message.remove(0,1);
+    message.remove(0,1);
+    return message;
+}
+

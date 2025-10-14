@@ -12,11 +12,14 @@ void irISR() {
 }
 
 bool wall_close(float ir_read) {
-   if (ir_read > 700) {
-      return true;
-   } else {
-      return false;
-   }
+    Serial.print("read value = ");
+    Serial.println(ir_read);
+    if (ir_read > 800) {
+        delay(100);
+        return true;
+    } else {
+        return false;
+    }
 }
 
 // void setupIRInterrupt(int pin) {

@@ -1,8 +1,13 @@
 #include "color.h"
 
+int   lane[4][3] = {0};   // creates/stores average values for each LED in each condition
+int   mag[4];             // creates the vector magnitudes between measured values and each average condition
+int   ambient, red, blue; // measured values
+int   bestLane;       // returned value for most likely lane
+int   bestValue;          // stores lowest magnitude for 'for' loop
+
 void setUpColorPins() {
-
-
+    //setup Color Pins
     pinMode(11, OUTPUT); // red LED
     pinMode(12, OUTPUT); // blue LED
     pinMode(13, OUTPUT); // photocell, gives power for voltage divider
@@ -22,7 +27,6 @@ void setUpColorPins() {
     avg(lane[3]);
 
     digitalWrite(13, LOW);
-
 }
 
 
@@ -64,7 +68,6 @@ int getColor() {
     }
 
     return bestLane; // 0 = Black, 1 = Red, 2 = Blue, 3 = Yellow
-
 }
 
 

@@ -12,26 +12,48 @@ typedef enum {
 
 State currentState = START;
 
-
+void blink(int pin, int num){
+    for(int i = 0; i < num; i++){
+        digitalWrite(pin, HIGH);
+        delay(500);
+        digitalWrite(pin, LOW);
+        delay(500);
+    }
+}
 
 void setup() {
 	//initialize serial monitor
     Serial.begin(9600);
 
 	//initialize motor pins
-	setupMotorPins();
+	//setupMotorPins();
 
+    pinMode(4, OUTPUT); // Enable pin (orange)
+    pinMode(5, OUTPUT); //PWM pin (green)
+    pinMode(6, OUTPUT); //Reference pin (green)
+
+    //Right Motor
+    pinMode(8, OUTPUT); // Enable pin (orange)
+    pinMode(9, OUTPUT); //PWM pin (green)
+    pinMode(10, OUTPUT); //Reference pin (green)
+
+    pinMode(LED_BUILTIN, OUTPUT);
+
+    //Color Sensing
+    //setUpColorPins();
 
 	//start websocket up
-    //setupSocket();
+    setupSocket();
 
-    // String message = readMessage();
+    String message = readMessage();
+    Serial.println(message);
     // while(1){
     //     String message = readMessage();
     //     if(message.length() > 0){
     //         Serial.println(message);
-    //         message.remove(0, 10);
+    //         //message.remove(0, 10);
     //         String id = parseID(message);
+    //         Serial.print("id = ");
     //         Serial.println(id);
     //         String sent = getMessage(message);
     //         Serial.println("message = " + sent);
@@ -40,13 +62,14 @@ void setup() {
     //             Serial.println("Our ID");
     //         }
     //         else Serial.println("not our id");
-    //         //String nMessage = parseID(message);
-    //         // Serial.println(nMessage);
     //     }
-    
+    // }
 }
 
-void loop() {
+void loop(){
+
+    // setLSpeed(150);
+    // leftMotorForward();
 
 	// if (ir_read() < 700) {
 	// 	leftMotorForward(150);
@@ -59,47 +82,113 @@ void loop() {
     // float val = ir_read();
     // Serial.print("Analong IR: ");
     // Serial.print(val);
-    if (wall_close(ir_read()))
-    {
-        Serial.println("wall detected");
-        motorsStop();
-    }
+    // while (wall_close(ir_read()))
+    // {
+    //     //Serial.println("wall detected");
+    //     motorsStop();
+    // }
 
     // writeMessage("test message");
     // delay(1000);
-    // // put your main code here, to run repeatedly:
-    // switch (currentState){
-    // case START:
+
+
+    switch (currentState){
+    case START:
+        {
+            Serial.println("inside start state");
+            String message = readMessage();
+            if(parseID(message) == "8050D1451904"){
+                int state = getMessage(message).toInt();
+                writeMessage("Inside Start State");
+                Serial.println(message);
+                currentState = (State) state;
+                blink(LED_BUILTIN, 3);
+            }
+            delay(3000);
+            break;
+        }
+    case firstWALL:
+        {
+            Serial.println("inside first wall state");
+            String message = readMessage();
+            if(parseID(message) == "8050D1451904"){
+                if(getMessage(message) == "2"){
+                    writeMessage("Inside first wall State");
+                    Serial.println(message);
+                    currentState = findCOLOR_X;
+                    blink(LED_BUILTIN, 3);
+                }
+                else {
+                    Serial.println(message);
+                    currentState = firstWALL;
+                    blink(LED_BUILTIN, 2);
+                }
+            }
+            delay(3000);
+            break;
+        }
+    case findCOLOR_X:
+        {            
+            Serial.println("inside find color x state");
+            String message = readMessage();
+            if(parseID(message) == "8050D1451904"){
+                if(getMessage(message) == "3"){
+                    writeMessage("Inside find color x State");
+                    blink(LED_BUILTIN, 3);
+                    Serial.println(message);
+                    currentState = START;
+                }
+                else {
+                    Serial.println(message);
+                    currentState = findCOLOR_X;
+                    blink(LED_BUILTIN, 2);
+                }
+            }
+            delay(3000);
+            break;
+        }
+    case laneFOLLOW_X:
+
+        writeMessage("Inside lane follow x state");
+        blink(LED_BUILTIN, 4);
+        delay(5000);
+
+        currentState = findCOLOR_Y;
+
+        break;
+
+    case findCOLOR_Y:
+
+        writeMessage("Inside find color y state");
         
-    //     break;
+        blink(LED_BUILTIN, 5);
+        delay(5000);
+
+        currentState = laneFOLLOW_Y;
+
+        break;
     
-    // case firstWALL:
+    case laneFOLLOW_Y:
+        writeMessage("Inside lane follow y state");
+        
+        blink(LED_BUILTIN, 6);
+        delay(5000);
 
-    //     break;
+        currentState = findSTART;
+        break;
 
-    // case findCOLOR_X:
+    case findSTART:
 
-    //     break;
+        writeMessage("Inside find start state");
+        
+        blink(LED_BUILTIN, 7);
+        delay(5000);
+        currentState = START;
+        break;
 
-    // case laneFOLLOW_X:
-
-    //     break;
-
-    // case findCOLOR_Y:
-
-    //     break;
-    
-    // case laneFOLLOW_Y:
-
-    //     break;
-
-    // case findSTART:
-
-    //     break;
-
-    // default:
-    //     currentState = START;
-    //     break;
-    // }
+    default:
+        currentState = START;
+        break;
+    }
 
 }

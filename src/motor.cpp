@@ -4,17 +4,17 @@
 uint8_t l_speed; 
 uint8_t r_speed; 
 
-void setupMotorPins() {
-    //Left Motor
-    pinMode(4, OUTPUT); // Enable pin (orange)
-    pinMode(5, OUTPUT); //PWM pin (green)
-    pinMode(6, OUTPUT); //Reference pin (green)
+// void setupMotorPins() {
+//     //Left Motor
+//     pinMode(4, OUTPUT); // Enable pin (orange)
+//     pinMode(5, OUTPUT); //PWM pin (green)
+//     pinMode(6, OUTPUT); //Reference pin (green)
 
-    //Right Motor
-    pinMode(8, OUTPUT); // Enable pin (orange)
-    pinMode(9, OUTPUT); //PWM pin (green)
-    pinMode(10, OUTPUT); //Reference pin (green)
-}
+//     //Right Motor
+//     pinMode(8, OUTPUT); // Enable pin (orange)
+//     pinMode(9, OUTPUT); //PWM pin (green)
+//     pinMode(10, OUTPUT); //Reference pin (green)
+// }
 
 void leftMotorForward() { //Speed 0-255
     digitalWrite(4, HIGH); //Set enable high
