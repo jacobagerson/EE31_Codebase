@@ -66,7 +66,19 @@ void setup() {
     // }
 }
 
+int communicate(){
+    String message = readMessage();
+    int state = -1;
+    if(parseID(message) == "8050D1451904"){
+        state = getMessage(message).toInt();
+        Serial.println(message);
+        writeMessage("Write to server");
+    }
+    return state; 
+}
+
 void loop(){
+    int num = 0;
 
     // setLSpeed(150);
     // leftMotorForward();
@@ -96,94 +108,77 @@ void loop(){
     case START:
         {
             Serial.println("inside start state");
-            String message = readMessage();
-            if(parseID(message) == "8050D1451904"){
-                int state = getMessage(message).toInt();
-                writeMessage("Inside Start State");
-                Serial.println(message);
-                currentState = (State) state;
-                blink(LED_BUILTIN, 3);
-            }
+            num = communicate();
+            if(num == -1){
+                currentState = START; 
+            } else currentState = (State) num; 
+            blink(LED_BUILTIN, 3);
             delay(3000);
             break;
         }
     case firstWALL:
         {
             Serial.println("inside first wall state");
-            String message = readMessage();
-            if(parseID(message) == "8050D1451904"){
-                if(getMessage(message) == "2"){
-                    writeMessage("Inside first wall State");
-                    Serial.println(message);
-                    currentState = findCOLOR_X;
-                    blink(LED_BUILTIN, 3);
-                }
-                else {
-                    Serial.println(message);
-                    currentState = firstWALL;
-                    blink(LED_BUILTIN, 2);
-                }
-            }
+            num = communicate();
+            if(num == -1){
+                currentState = firstWALL; 
+            } else currentState = (State) num; 
+            blink(LED_BUILTIN, 3);
             delay(3000);
             break;
         }
     case findCOLOR_X:
         {            
-            Serial.println("inside find color x state");
-            String message = readMessage();
-            if(parseID(message) == "8050D1451904"){
-                if(getMessage(message) == "3"){
-                    writeMessage("Inside find color x State");
-                    blink(LED_BUILTIN, 3);
-                    Serial.println(message);
-                    currentState = START;
-                }
-                else {
-                    Serial.println(message);
-                    currentState = findCOLOR_X;
-                    blink(LED_BUILTIN, 2);
-                }
-            }
+            Serial.println("inside findColor_X state");
+            num = communicate();
+            if(num == -1){
+                currentState = findCOLOR_X; 
+            } else currentState = (State) num; 
+            blink(LED_BUILTIN, 3);
             delay(3000);
             break;
         }
     case laneFOLLOW_X:
 
-        writeMessage("Inside lane follow x state");
-        blink(LED_BUILTIN, 4);
-        delay(5000);
-
-        currentState = findCOLOR_Y;
-
+        Serial.println("inside laneFollow_x state");
+        num = communicate();
+        if(num == -1){
+            currentState = laneFOLLOW_X; 
+        } else currentState = (State) num; 
+        blink(LED_BUILTIN, 3);
+        delay(3000);
         break;
 
     case findCOLOR_Y:
 
-        writeMessage("Inside find color y state");
-        
-        blink(LED_BUILTIN, 5);
-        delay(5000);
-
-        currentState = laneFOLLOW_Y;
-
+        Serial.println("inside findColor_Y state");
+        num = communicate();
+        if(num == -1){
+            currentState = findCOLOR_Y; 
+        } else currentState = (State) num; 
+        blink(LED_BUILTIN, 3);
+        delay(3000);
         break;
     
     case laneFOLLOW_Y:
-        writeMessage("Inside lane follow y state");
-        
-        blink(LED_BUILTIN, 6);
-        delay(5000);
-
-        currentState = findSTART;
+        Serial.println("inside laneFollow_y state");
+        num = communicate();
+        if(num == -1){
+            currentState = laneFOLLOW_Y; 
+        } else currentState = (State) num; 
+        blink(LED_BUILTIN, 3);
+        delay(3000);
         break;
 
     case findSTART:
 
-        writeMessage("Inside find start state");
-        
-        blink(LED_BUILTIN, 7);
-        delay(5000);
-        currentState = START;
+        Serial.println("inside findStart state");
+        num = communicate();
+        if(num == -1){
+            currentState = findSTART; 
+        } else currentState = (State) num; 
+        blink(LED_BUILTIN, 3);
+        delay(3000);
         break;
 
     default:
