@@ -22,22 +22,22 @@ void leftMotorForward() { //Speed 0-255
     analogWrite(5, l_speed);
 }
 
+void leftMotorBackward() { //Speed 0-255
+    digitalWrite(4, HIGH); //Set enable high
+    digitalWrite(6, HIGH); //Set reference high
+    analogWrite(5, 255 - l_speed); //Set speed
+}
+
 void rightMotorForward() { //Speed 0-255
     digitalWrite(8, HIGH); //Set enable high
     digitalWrite(10, LOW); //Set reference low
     analogWrite(9, r_speed); //Set speed
 }
 
-void leftMotorBackward() { //Speed 0-255
-    digitalWrite(4, HIGH); //Set enable high
-    digitalWrite(6, HIGH); //Set reference high
-    analogWrite(5, l_speed); //Set speed
-}
-
 void rightMotorBackward() { //Speed 0-255
     digitalWrite(8, HIGH); //Set enable high
     digitalWrite(10, HIGH); //Set reference high
-    analogWrite(9, r_speed); //Set speed
+    analogWrite(9, 255 - r_speed); //Set speed
 }
 
 void leftMotorStop() {
@@ -77,10 +77,16 @@ void correctLine(int lColor, int rColor){
 
     //make these changes and then call color sensing function again
     //run this until neither on black
+}
 
+void turnL90(){
+    leftMotorBackward();
+    rightMotorForward();
+}
 
-
-
+void turnR90(){
+    rightMotorBackward();
+    leftMotorForward();
 }
 
  

@@ -3,7 +3,7 @@
 volatile bool irTriggered = false;
 
 float ir_read() {
-   return analogRead(A0);
+   return analogRead(A0); 
 }
 
 // ISR
@@ -11,11 +11,12 @@ void irISR() {
    irTriggered = true;
 }
 
-bool wall_close(float ir_read) {
-    Serial.print("read value = ");
-    Serial.println(ir_read);
-    if (ir_read > 800) {
-        delay(100);
+bool wall_close() {
+    // Serial.print("read value = ");
+    // Serial.println(ir_read);
+    float check_distance = analogRead(A0);
+    if (check_distance > 750) { //750 or closer, something is close to our bot
+        delay(10);
         return true;
     } else {
         return false;
