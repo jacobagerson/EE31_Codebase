@@ -93,13 +93,15 @@ void loop(){
 	// 	leftMotorStop();
 	// }
 
-    float val = ir_read();
-    Serial.print("Analong IR: ");
-    Serial.println(val);
-    while (wall_close())
-    {
-        Serial.println("wall detected");
-    }
+    
+
+    // float val = ir_read();
+    // Serial.print("Analong IR: ");
+    // Serial.println(val);
+    // while (wall_close())
+    // {
+    //     Serial.println("wall detected");
+    // }
     
     //when moving along lanes, want to check our distance each step with the wall_close();
     //if we get this = true, then we can turn around/L/R and continue on with our bot motion
