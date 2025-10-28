@@ -26,16 +26,16 @@ void setup() {
     Serial.begin(9600);
 
 	//initialize motor pins
-	//setupMotorPins();
+	setupMotorPins();
 
-    pinMode(4, OUTPUT); // Enable pin (orange)
-    pinMode(5, OUTPUT); //PWM pin (green)
-    pinMode(6, OUTPUT); //Reference pin (green)
+    // pinMode(4, OUTPUT); // Enable pin (orange)
+    // pinMode(5, OUTPUT); //PWM pin (green)
+    // pinMode(6, OUTPUT); //Reference pin (green)
 
-    //left Motor
-    pinMode(8, OUTPUT); // Enable pin (orange)
-    pinMode(9, OUTPUT); //PWM pin (green)
-    pinMode(10, OUTPUT); //Reference pin (green)
+    // //left Motor
+    // pinMode(8, OUTPUT); // Enable pin (orange)
+    // pinMode(9, OUTPUT); //PWM pin (green)
+    // pinMode(10, OUTPUT); //Reference pin (green)
 
     pinMode(LED_BUILTIN, OUTPUT);
 
@@ -45,7 +45,7 @@ void setup() {
     //setUpColorPins();
 
 	//start websocket up
-    //setupSocket();
+    setupSocket();
 
     // String message = readMessage();
     // Serial.println(message);
@@ -93,8 +93,11 @@ void loop(){
 	// 	leftMotorStop();
 	// }
 
+<<<<<<< HEAD
     
 
+=======
+>>>>>>> 7b38b73 (10/28 changes)
     // float val = ir_read();
     // Serial.print("Analong IR: ");
     // Serial.println(val);
@@ -111,94 +114,94 @@ void loop(){
     // delay(1000);
 
 
-    // switch (currentState){
-    // case START:
-    //     {
-    //         //Serial.println("inside start state");
-    //         num = communicate();
-    //         if(num == -1){
-    //             currentState = START; 
-    //         } else currentState = (State) num; 
-    //         setLSpeed(240);
-    //         leftMotorForward();
-    //         //delay(3000);
-    //         break;
-    //     }
-    // case firstWALL:
-    //     {
-    //         //Serial.println("inside first wall state");
-    //         num = communicate();
-    //         if(num == -1){
-    //             currentState = firstWALL; 
-    //         } else currentState = (State) num; 
-    //         setLSpeed(150);
-    //         leftMotorBackward();
-    //         //delay(3000);
-    //         break;
-    //     }
-    // case findCOLOR_X:
-    //     {            
-    //         //Serial.println("inside findColor_X state");
-    //         num = communicate();
-    //         if(num == -1){
-    //             currentState = findCOLOR_X; 
-    //         } else currentState = (State) num; 
-    //         leftMotorStop();
-    //         setLSpeed(50);
-    //         leftMotorBackward();
-    //         //delay(1000);
-    //         break;
-    //     }
-    // case laneFOLLOW_X:
+    switch (currentState){
+    case START:
+        {
+            Serial.println("inside start state");
+            num = communicate();
+            if(num == -1){
+                currentState = START; 
+            } else currentState = (State) num; 
+            motorsStop();
+            moveForward();
+            delay(1000);
+            break;
+        }
+    case firstWALL:
+        {
+            Serial.println("inside first wall state");
+            num = communicate();
+            if(num == -1){
+                currentState = firstWALL; 
+            } else currentState = (State) num; 
+            motorsStop();
+            moveBackward();
+            delay(1000);
+            break;
+        }
+    case findCOLOR_X:
+        {            
+            //Serial.println("inside findColor_X state");
+            num = communicate();
+            if(num == -1){
+                currentState = findCOLOR_X; 
+            } else currentState = (State) num; 
+            leftMotorStop();
+            setLSpeed(50);
+            leftMotorBackward();
+            //delay(1000);
+            break;
+        }
+    case laneFOLLOW_X:
 
-    //     //Serial.println("inside laneFollow_x state");
-    //     num = communicate();
-    //     if(num == -1){
-    //         currentState = laneFOLLOW_X; 
-    //     } else currentState = (State) num; 
-    //     setLSpeed(200);
-    //     leftMotorForward();
-    //     //delay(1000);
-    //     break;
+        //Serial.println("inside laneFollow_x state");
+        num = communicate();
+        if(num == -1){
+            currentState = laneFOLLOW_X; 
+        } else currentState = (State) num; 
+        setLSpeed(200);
+        leftMotorForward();
+        //delay(1000);
+        break;
 
-    // case findCOLOR_Y:
+    case findCOLOR_Y:
 
-    //     //Serial.println("inside findColor_Y state");
-    //     num = communicate();
-    //     if(num == -1){
-    //         currentState = findCOLOR_Y; 
-    //     } else currentState = (State) num; 
-    //     setLSpeed(255);
-    //     leftMotorBackward();
-    //     //delay(1000);
-    //     break;
+        //Serial.println("inside findColor_Y state");
+        num = communicate();
+        if(num == -1){
+            currentState = findCOLOR_Y; 
+        } else currentState = (State) num; 
+        setLSpeed(255);
+        leftMotorBackward();
+        //delay(1000);
+        break;
     
-    // case laneFOLLOW_Y:
-    //     //Serial.println("inside laneFollow_y state");
-    //     num = communicate();
-    //     if(num == -1){
-    //         currentState = laneFOLLOW_Y; 
-    //     } else currentState = (State) num; 
-    //     setLSpeed(50);
-    //     leftMotorBackward();
-    //     //delay(1000);
-    //     break;
+    case laneFOLLOW_Y:
+        //Serial.println("inside laneFollow_y state");
+        num = communicate();
+        if(num == -1){
+            currentState = laneFOLLOW_Y; 
+        } else currentState = (State) num; 
+        setLSpeed(50);
+        leftMotorBackward();
+        //delay(1000);
+        break;
 
-    // case findSTART:
+    case findSTART:
 
-    //     //Serial.println("inside findStart state");
-    //     num = communicate();
-    //     if(num == -1){
-    //         currentState = findSTART; 
-    //     } else currentState = (State) num; 
-    //     setLSpeed(250);
-    //     leftMotorForward();
-    //     //delay(1000);
-    //     break;
+        //Serial.println("inside findStart state");
+        num = communicate();
+        if(num == -1){
+            currentState = findSTART; 
+        } else currentState = (State) num; 
+        setLSpeed(250);
+        leftMotorForward();
+        //delay(1000);
+        break;
 
-    // default:
-    //     currentState = START;
-    //     break;
-    // }
+    default:
+        currentState = START;
+        break;
+    }
 
 }
