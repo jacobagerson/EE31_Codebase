@@ -93,11 +93,6 @@ void loop(){
 	// 	leftMotorStop();
 	// }
 
-<<<<<<< HEAD
-    
-
-=======
->>>>>>> 7b38b73 (10/28 changes)
     // float val = ir_read();
     // Serial.print("Analong IR: ");
     // Serial.println(val);
