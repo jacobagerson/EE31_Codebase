@@ -118,7 +118,11 @@ void loop(){
                 currentState = START; 
             } else currentState = (State) num; 
             motorsStop();
-            moveForward();
+            setSpeed(150);
+            delay(1000);
+            turnL90();
+            delay(1000);
+            turnR90();
             delay(1000);
             break;
         }
@@ -130,7 +134,12 @@ void loop(){
                 currentState = firstWALL; 
             } else currentState = (State) num; 
             motorsStop();
+            setSpeed(150);
             moveBackward();
+            delay(1000);
+            turnL90();
+            delay(1000);
+            turnR90();
             delay(1000);
             break;
         }

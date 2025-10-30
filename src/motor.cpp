@@ -58,15 +58,11 @@ void motorsStop() {
 }
 
 void moveForward(){
-    r_speed = 255;
-    l_speed = r_speed;
     leftMotorForward();
     rightMotorForward();
 }
 
 void moveBackward(){
-    r_speed = 255;
-    l_speed = r_speed;
     leftMotorBackward();
     rightMotorBackward();
 }
@@ -94,13 +90,28 @@ void correctLine(int lColor, int rColor){
 }
 
 void turnL90(){
-    leftMotorBackward();
+    motorsStop();
+    setRSpeed(150);
+    setLSpeed(100);
     rightMotorForward();
+    leftMotorBackward();
+    delay(100);
+    motorsStop();
 }
 
 void turnR90(){
+    motorsStop();
+    setRSpeed(100);
+    setLSpeed(150);
     rightMotorBackward();
     leftMotorForward();
+    delay(100);
+    motorsStop();
+}
+
+void setSpeed(uint8_t speed) {
+    l_speed = speed;
+    r_speed = speed;
 }
 
  
