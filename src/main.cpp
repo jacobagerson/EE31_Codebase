@@ -46,26 +46,6 @@ void setup() {
 
 	//start websocket up
     setupSocket();
-
-    // String message = readMessage();
-    // Serial.println(message);
-    // while(1){
-    //     String message = readMessage();
-    //     if(message.length() > 0){
-    //         Serial.println(message);
-    //         //message.remove(0, 10);
-    //         String id = parseID(message);
-    //         Serial.print("id = ");
-    //         Serial.println(id);
-    //         String sent = getMessage(message);
-    //         Serial.println("message = " + sent);
-
-    //         if(id == "8050D1451904"){
-    //             Serial.println("Our ID");
-    //         }
-    //         else Serial.println("not our id");
-    //     }
-    // }
 }
 
 int communicate(){
@@ -105,7 +85,6 @@ void loop(){
     //if we get this = true, then we can turn around/L/R and continue on with our bot motion
     //just set a global bool to help us change states
 
-    // writeMessage("test message");
     // delay(1000);
 
 
@@ -118,12 +97,17 @@ void loop(){
                 currentState = START; 
             } else currentState = (State) num; 
             motorsStop();
+<<<<<<< HEAD
             setSpeed(150);
             delay(1000);
             turnL90();
             delay(1000);
             turnR90();
             delay(1000);
+=======
+            setSpeed(10);
+            moveForward();
+>>>>>>> c31242f92f23976e46a16fb326eefcf0dd5f4bb6
             break;
         }
     case firstWALL:
@@ -134,6 +118,7 @@ void loop(){
                 currentState = firstWALL; 
             } else currentState = (State) num; 
             motorsStop();
+<<<<<<< HEAD
             setSpeed(150);
             moveBackward();
             delay(1000);
@@ -141,6 +126,10 @@ void loop(){
             delay(1000);
             turnR90();
             delay(1000);
+=======
+            setSpeed(50);
+            moveBackward();
+>>>>>>> c31242f92f23976e46a16fb326eefcf0dd5f4bb6
             break;
         }
     case findCOLOR_X:
@@ -157,17 +146,17 @@ void loop(){
             break;
         }
     case laneFOLLOW_X:
-
-        //Serial.println("inside laneFollow_x state");
-        num = communicate();
-        if(num == -1){
-            currentState = laneFOLLOW_X; 
-        } else currentState = (State) num; 
-        setLSpeed(200);
-        leftMotorForward();
-        //delay(1000);
-        break;
-
+        {
+            //Serial.println("inside laneFollow_x state");
+            num = communicate();
+            if(num == -1){
+                currentState = laneFOLLOW_X; 
+            } else currentState = (State) num; 
+            setLSpeed(200);
+            leftMotorForward();
+            //delay(1000);
+            break;
+        }
     case findCOLOR_Y:
 
         //Serial.println("inside findColor_Y state");

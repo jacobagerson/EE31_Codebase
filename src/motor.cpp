@@ -75,6 +75,10 @@ void setRSpeed(uint8_t speed){
     r_speed = speed; 
 }
 
+void setSpeed(uint8_t speed){
+    r_speed = l_speed = speed; 
+}
+
 //color sensors on both sides of the chassey, width = little less than width of channel
 
 void correctLine(int lColor, int rColor){
