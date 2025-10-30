@@ -58,15 +58,11 @@ void motorsStop() {
 }
 
 void moveForward(){
-    r_speed = 255;
-    l_speed = r_speed;
     leftMotorForward();
     rightMotorForward();
 }
 
 void moveBackward(){
-    r_speed = 255;
-    l_speed = r_speed;
     leftMotorBackward();
     rightMotorBackward();
 }
@@ -77,6 +73,10 @@ void setLSpeed(uint8_t speed){
 
 void setRSpeed(uint8_t speed){
     r_speed = speed; 
+}
+
+void setSpeed(uint8_t speed){
+    r_speed = l_speed = speed; 
 }
 
 //color sensors on both sides of the chassey, width = little less than width of channel

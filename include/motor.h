@@ -10,5 +10,7 @@ void rightMotorStop();
 void motorsStop();
 void setLSpeed (uint8_t speed);
 void setRSpeed (uint8_t speed);
+void setSpeed(uint8_t speed);
 void moveForward();
 void moveBackward();
+
