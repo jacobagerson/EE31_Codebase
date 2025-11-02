@@ -3,7 +3,7 @@
 volatile bool irTriggered = false;
 
 float ir_read() {
-   return analogRead(A0); 
+   return analogRead(A3);
 }
 
 // ISR
@@ -14,7 +14,7 @@ void irISR() {
 bool wall_close() {
     // Serial.print("read value = ");
     // Serial.println(ir_read);
-    float check_distance = analogRead(A0);
+    float check_distance = analogRead(A3);
     if (check_distance > 750) { //750 or closer, something is close to our bot
         delay(10);
         return true;

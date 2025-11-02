@@ -26,16 +26,16 @@ void setup() {
     Serial.begin(9600);
 
 	//initialize motor pins
-	setupMotorPins();
+	//setupMotorPins();
 
-    // pinMode(4, OUTPUT); // Enable pin (orange)
-    // pinMode(5, OUTPUT); //PWM pin (green)
-    // pinMode(6, OUTPUT); //Reference pin (green)
+    pinMode(4, OUTPUT); // Enable pin (orange)
+    pinMode(5, OUTPUT); //PWM pin (green)
+    pinMode(6, OUTPUT); //Reference pin (green)
 
-    // //left Motor
-    // pinMode(8, OUTPUT); // Enable pin (orange)
-    // pinMode(9, OUTPUT); //PWM pin (green)
-    // pinMode(10, OUTPUT); //Reference pin (green)
+    //left Motor
+    pinMode(8, OUTPUT); // Enable pin (orange)
+    pinMode(9, OUTPUT); //PWM pin (green)
+    pinMode(10, OUTPUT); //Reference pin (green)
 
     pinMode(LED_BUILTIN, OUTPUT);
 
@@ -64,13 +64,13 @@ void loop(){
 
     digitalWrite(4, HIGH); //Enable = Yellow
     digitalWrite(6, LOW); //Reference = white
-    analogWrite(5, 200); //PWM = Orange
+    analogWrite(5, 250); //PWM = Orange
 
     
-    digitalWrite(8, HIGH); //Enable = Yellow
-    digitalWrite(10, LOW); //Reference = white
-    analogWrite(9, 200); //PWM = Orange
-}
+    // digitalWrite(8, HIGH); //Enable = Yellow
+    // digitalWrite(10, LOW); //Reference = white
+    // analogWrite(9, 200); //PWM = Orange
+
 
     // setLSpeed(150);
     // leftMotorForward();
@@ -98,18 +98,18 @@ void loop(){
     //if we get this = true, then we can turn around/L/R and continue on with our bot motion
     //just set a global bool to help us change states
 
-    // delay(1000);
+ //   delay(1000);
 
 
     // switch (currentState){
     // case START:
     //     {
-            
+    //         Serial.println("inside start state");
     //         num = communicate();
     //         if(num == -1){
     //             currentState = START; 
     //         } else currentState = (State) num; 
-    //         Serial.println("inside start state");
+
     //         motorsStop();
     //         setSpeed(150);
     //         delay(1000);
