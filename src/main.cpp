@@ -62,6 +62,8 @@ int communicate(){
 void loop(){
     int num = 0;
 
+    int color[2] = {0};
+
     digitalWrite(4, HIGH); //Enable = Yellow
     digitalWrite(6, LOW); //Reference = white
     analogWrite(5, 250); //PWM = Orange
