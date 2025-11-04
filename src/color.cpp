@@ -140,13 +140,13 @@ void avg(int a_lane[3], int b_lane[3]) {
         b_lane[0] += analogRead(A1);
 
         digitalWrite(11, HIGH);     // red LED on
-        delay(100);
+        delay(50);
         a_lane[1] += analogRead(A0);   // red
         b_lane[1] += analogRead(A1);
         digitalWrite(11, LOW);
 
         digitalWrite(12, HIGH);     // blue LED on
-        delay(100);
+        delay(50);
         a_lane[2] += analogRead(A0);   // blue
         b_lane[2] += analogRead(A1);
         digitalWrite(12, LOW);
