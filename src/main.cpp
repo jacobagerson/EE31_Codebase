@@ -42,7 +42,7 @@ void setup() {
     //setRSpeed(240);
 
     //Color Sensing
-    //setUpColorPins();
+    setUpColorPins();
 
 	//start websocket up
     //setupSocket();
@@ -65,7 +65,7 @@ void loop(){
     int color[2] = {0};
 
     while(1) {
-        getColor(color[2]);
+        getColor(color);
         Serial.print("Sensor 1: ");
         Serial.print(color[0]);
         Serial.print(" Sensor 2: ");

@@ -11,7 +11,7 @@ int   b_bestValue;            // stores lowest magnitude for 'for' loop
 
 void setUpColorPins() {
     //setup Color Pins
-    pinMode(11, OUTPUT); // red LED
+    pinMode(7, OUTPUT); // red LED
     pinMode(12, OUTPUT); // blue LED
     pinMode(13, OUTPUT); // photocell, gives power for voltage divider
 
@@ -68,11 +68,11 @@ void getColor(int color[2]) {
     a_ambient = analogRead(A0);
     b_ambient = analogRead(A1);
 
-    digitalWrite(11, HIGH);
+    digitalWrite(7, HIGH);
     delay(50);
     a_red = analogRead(A0);
     b_red = analogRead(A1);
-    digitalWrite(11, LOW);
+    digitalWrite(7, LOW);
 
     digitalWrite(12, HIGH);
     delay(50);
@@ -139,11 +139,11 @@ void avg(int a_lane[3], int b_lane[3]) {
         a_lane[0] += analogRead(A0);   // ambient
         b_lane[0] += analogRead(A1);
 
-        digitalWrite(11, HIGH);     // red LED on
+        digitalWrite(7, HIGH);     // red LED on
         delay(50);
         a_lane[1] += analogRead(A0);   // red
         b_lane[1] += analogRead(A1);
-        digitalWrite(11, LOW);
+        digitalWrite(7, LOW);
 
         digitalWrite(12, HIGH);     // blue LED on
         delay(50);
