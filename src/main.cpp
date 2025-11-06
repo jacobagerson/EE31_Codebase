@@ -28,21 +28,12 @@ void setup() {
 	//initialize motor pins
 	//setupMotorPins();
 
-    pinMode(4, OUTPUT); // Enable pin (orange)
-    pinMode(5, OUTPUT); //PWM pin (green)
-    pinMode(6, OUTPUT); //Reference pin (green)
-
-    //left Motor
-    pinMode(8, OUTPUT); // Enable pin (orange)
-    pinMode(9, OUTPUT); //PWM pin (green)
-    pinMode(10, OUTPUT); //Reference pin (green)
-
     pinMode(LED_BUILTIN, OUTPUT);
 
     //setRSpeed(240);
 
     //Color Sensing
-    setUpColorPins();
+    //setUpColorPins();
 
 	//start websocket up
     //setupSocket();
@@ -60,23 +51,26 @@ int communicate(){
 }
 
 void loop(){
-    int num = 0;
+    // int num = 0;
 
-    int color[2] = {0};
+    // int color[2] = {0};
 
-    while(1) {
-        getColor(color);
-        Serial.print("Sensor 1: ");
-        Serial.print(color[0]);
-        Serial.print(" Sensor 2: ");
-        Serial.println(color[1]);
-    }
+    // while(1) {
+    //     getColor(color);
+    //     Serial.print("Sensor 1: ");
+    //     Serial.print(color[0]);
+    //     Serial.print(" Sensor 2: ");
+    //     Serial.println(color[1]);
+    // }
 
-    digitalWrite(4, HIGH); //Enable = Yellow
-    digitalWrite(6, LOW); //Reference = white
-    analogWrite(5, 250); //PWM = Orange
+    // digitalWrite(4, HIGH); //Enable = Yellow
+    // digitalWrite(6, LOW); //Reference = white
+    // analogWrite(5, 250); //PWM = Orange
 
-    
+    Serial.print(ir_read());
+    Serial.print("\n");
+    delay(200);
+
     // digitalWrite(8, HIGH); //Enable = Yellow
     // digitalWrite(10, LOW); //Reference = white
     // analogWrite(9, 200); //PWM = Orange
