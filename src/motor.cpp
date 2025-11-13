@@ -75,9 +75,9 @@ void setRSpeed(uint8_t speed){
     r_speed = speed; 
 }
 
-// void setSpeed(uint8_t speed){
-//     r_speed = l_speed = speed; 
-// }
+void setSpeed(uint8_t speed){
+    r_speed = l_speed = speed; 
+}
 
 //color sensors on both sides of the chassey, width = little less than width of channel
 
@@ -99,8 +99,7 @@ void turnL90(){
     setLSpeed(100);
     rightMotorForward();
     leftMotorBackward();
-    delay(100);
-    motorsStop();
+    rightMotorForward();
 }
 
 void turnR90(){
@@ -109,13 +108,6 @@ void turnR90(){
     setLSpeed(150);
     rightMotorBackward();
     leftMotorForward();
-    delay(100);
-    motorsStop();
-}
-
-void setSpeed(uint8_t speed) {
-    l_speed = speed;
-    r_speed = speed;
 }
 
  
