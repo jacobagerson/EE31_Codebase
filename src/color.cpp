@@ -54,10 +54,20 @@ void getColor(int color[2]) {
     digitalWrite(12, LOW);
     digitalWrite(13, LOW);
 
+    // debugging print 
+    Serial.print("Sensor A:"); Serial.print(a_amb); Serial.print(", "); Serial.print(a_red); Serial.print(", "); Serial.println(a_blue); 
+    Serial.print("Sensor B:"); Serial.print(b_amb); Serial.print(", "); Serial.print(b_red); Serial.print(", "); Serial.println(b_blue); 
+        
+
     // calculates the angles of the vector created by 
     // the sensor reads
     float a_angle = atan2f((float)a_blue, (float)a_red);
     float b_angle = atan2f((float)b_blue, (float)b_red);
+
+
+    //debugging print output values in degrees
+    Serial.print("Sensor A: "); Serial.println(a_angle*(180/PI));
+    Serial.print("Sensor B: "); Serial.println(b_angle*(180/PI));
 
 
     // takes the difference between teh measured angle
@@ -104,6 +114,9 @@ void avg(float &a_out, float &b_out) {
         b_blue = analogRead(A1) - b_amb;
         digitalWrite(12, LOW);
 
+        // debugging print 
+        Serial.print("Sensor A:"); Serial.print(a_amb); Serial.print(", "); Serial.print(a_red); Serial.print(", "); Serial.println(a_blue); 
+        Serial.print("Sensor B:"); Serial.print(b_amb); Serial.print(", "); Serial.print(b_red); Serial.print(", "); Serial.println(b_blue); 
         
         // creates a running sum for each of the angles
         a_sum += atan2f((float)a_blue, (float)a_red);
@@ -113,6 +126,9 @@ void avg(float &a_out, float &b_out) {
     // average and otuput
     a_out = a_sum / 10.0f;
     b_out = b_sum / 10.0f;
+    //debugging print output values in degrees
+    Serial.print("Sensor A: "); Serial.println(a_out*(180/PI));
+    Serial.print("Sensor B: "); Serial.println(b_out*(180/PI));
 }
 
 

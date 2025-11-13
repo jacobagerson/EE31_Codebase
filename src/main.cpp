@@ -33,7 +33,7 @@ void setup() {
     //setRSpeed(240);
 
     //Color Sensing
-    //setUpColorPins();
+    setUpColorPins();
 
 	//start websocket up
     //setupSocket();
@@ -53,15 +53,16 @@ int communicate(){
 void loop(){
     // int num = 0;
 
-    // int color[2] = {0};
+    int color[2] = {0};
 
-    // while(1) {
-    //     getColor(color);
-    //     Serial.print("Sensor 1: ");
-    //     Serial.print(color[0]);
-    //     Serial.print(" Sensor 2: ");
-    //     Serial.println(color[1]);
-    // }
+    while(1) {
+        getColor(color);
+        Serial.print("Sensor 1: ");
+        Serial.print(color[0]);
+        Serial.print(", Sensor 2: ");
+        Serial.println(color[1]);
+        delay(600);
+    }
 
     // digitalWrite(4, HIGH); //Enable = Yellow
     // digitalWrite(6, LOW); //Reference = white
