@@ -2,8 +2,8 @@
 char ssid[] = "tufts_eecs";
 char pass[] = "foundedin1883";
 
-char serverAddress[] = "34.28.153.91"; // server address
-int port = 80;
+char serverAddress[] = "35.239.140.61"; // server address
+int port = 8080;
 WiFiClient wifi;
 WebSocketClient client = WebSocketClient(wifi, serverAddress, port);
 String clientID = "8050D1451904"; //Insert your Server ID Here!
@@ -56,26 +56,12 @@ String readMessage(){
     return response;
 }
 
-String parseID(String message){
-    String result;
-    String temp = message.substring(0, 3);
-    if(temp == "Web"){
-        message.remove(0,3);
-        while(message[0] != '_'){
-            message.remove(0,1);
-        }
-        message.remove(0,1);
-    }
-    for(int i = 0; i < 12; i++){
-        result += message[i];
-    }
-    return result;
+String parseID(String message) {
+    return message.substring(0, 12);
 }
 
-String getMessage(String message){
-    while(message[0] != '.')
-        message.remove(0,1);
-    message.remove(0,1);
-    return message;
+String getMessage(String message) {
+    int dotIndex = message.lastIndexOf('.');
+    if (dotIndex == -1) return ""; 
+    return message.substring(dotIndex + 1);
 }
-

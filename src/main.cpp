@@ -26,52 +26,57 @@ void setup() {
     Serial.begin(9600);
 
 	//initialize motor pins
-	//setupMotorPins();
+	setupMotorPins();
 
     pinMode(LED_BUILTIN, OUTPUT);
 
     //setRSpeed(240);
 
     //Color Sensing
-    setUpColorPins();
+    //setUpColorPins();
 
 	//start websocket up
-    //setupSocket();
+    setupSocket();
     delay(2500);
 }
 
-int communicate(){
+int communicate() {
     String message = readMessage();
     int state = -1;
-    if(parseID(message) == "8050D1451904"){
-        state = getMessage(message).toInt();
-        Serial.println(message);
-        //writeMessage("Write to server");
+
+    if (message.length() > 0 && parseID(message) == "8050D1451904") {
+        String stateStr = getMessage(message);
+        state = stateStr.toInt();
+        //Serial.println(state);
     }
-    return state; 
+
+    if(state <= 6 && state >= 0){
+        return state; 
+    } else return -1; 
 }
+
 
 void loop(){
     int num = 0;
 
-    int color[2] = {0};
+    // int color[2] = {0};
 
-    while(1) {
-        getColor(color);
-        Serial.print("Sensor 1: ");
-        Serial.print(color[0]);
-        Serial.print(", Sensor 2: ");
-        Serial.println(color[1]);
-        delay(600);
-    }
+    // while(1) {
+    //     getColor(color);
+    //     Serial.print("Sensor 1: ");
+    //     Serial.print(color[0]);
+    //     Serial.print(", Sensor 2: ");
+    //     Serial.println(color[1]);
+    //     delay(600);
+    // }
 
     // digitalWrite(4, HIGH); //Enable = Yellow
     // digitalWrite(6, LOW); //Reference = white
     // analogWrite(5, 250); //PWM = Orange
 
-    Serial.print(ir_read());
-    Serial.print("\n");
-    delay(200);
+    // Serial.print(ir_read());
+    // Serial.print("\n");
+    // delay(200);
 
     // digitalWrite(8, HIGH); //Enable = Yellow
     // digitalWrite(10, LOW); //Reference = white
@@ -120,45 +125,53 @@ void loop(){
     //     delay(200);
     // }
 
-    motorsStop();
-    setSpeed(150);
-    turnL90();
-    // leftMotorForward();
-    // rightMotorBackward();
-    motorsStop();
-    delay(2000);
-    setSpeed(150);
-    turnR90();
-    // leftMotorBackward();
-    // rightMotorForward();
-    motorsStop();
-    delay(2000);
+    // motorsStop();
+    // setSpeed(150);
+    // turnL90();
+    // // // leftMotorForward();
+    // // // rightMotorBackward();
+    // motorsStop();
+    // delay(2000);
+    // setSpeed(150);
+    // turnR90();
+    // // leftMotorBackward();
+    // // rightMotorForward();
+    // motorsStop();
+    // delay(2000);
 
-    // switch (currentState){
-    // case START:
-    //     {
-    //         Serial.println("inside start state");
-    //         num = communicate();
-    //         if(num == -1){
-    //             currentState = START; 
-    //         } else currentState = (State) num; 
-    //         motorsStop();
-    //         setSpeed(150);
-    //         moveForward();
-    //         break;
-    //     }
-    // case firstWALL:
-    //     {
-    //         Serial.println("inside first wall state");
-    //         num = communicate();
-    //         if(num == -1){
-    //             currentState = firstWALL; 
-    //         } else currentState = (State) num; 
-    //         motorsStop();
-    //         setSpeed(150);
-    //         moveBackward();
-    //         break;
-    //     }
+    switch (currentState){
+    case START:
+        {
+            //Serial.println("inside start state");
+            num = communicate();
+            if(num == -1){
+                currentState = START; 
+            } else currentState = (State) num; 
+            //motorsStop();
+            delay(500);
+            //setSpeed(150);
+            Serial.println(ir_read());
+            
+            //turnL90();
+            //motorsStop();
+            delay(500);
+            break;
+        }
+    case firstWALL:
+        {
+            //Serial.println("inside first wall state");
+            num = communicate();
+            if(num == -1){
+                currentState = firstWALL; 
+            } else currentState = (State) num; 
+            motorsStop();
+            delay(500);
+            setSpeed(150);
+            turnR90();
+            //motorsStop();
+            delay(500);
+            break;
+        }
     // case findCOLOR_X:
     //     {            
     //         //Serial.println("inside findColor_X state");
@@ -218,9 +231,9 @@ void loop(){
     //     //delay(1000);
     //     break;
 
-    // default:
-    //     currentState = START;
-    //     break;
-    // }
+    default:
+        currentState = START;
+        break;
+    }
 
 }

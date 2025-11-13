@@ -100,7 +100,6 @@ void turnL90(){
     setLSpeed(100);
     rightMotorForward();
     leftMotorBackward();
-    rightMotorForward();
     delay(550);
 }
 
