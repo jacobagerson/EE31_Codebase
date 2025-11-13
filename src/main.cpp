@@ -36,7 +36,7 @@ void setup() {
     setUpColorPins();
 
 	//start websocket up
-    //setupSocket();
+    setupSocket();
 }
 
 int communicate(){
@@ -51,7 +51,7 @@ int communicate(){
 }
 
 void loop(){
-    // int num = 0;
+    int num = 0;
 
     int color[2] = {0};
 
@@ -106,69 +106,57 @@ void loop(){
  //   delay(1000);
 
 
-    // switch (currentState){
-    // case START:
-    //     {
-    //         Serial.println("inside start state");
-    //         num = communicate();
-    //         if(num == -1){
-    //             currentState = START; 
-    //         } else currentState = (State) num; 
-
-    //         motorsStop();
-    //         setSpeed(150);
-    //         delay(1000);
-    //         turnL90();
-    //         delay(1000);
-    //         turnR90();
-    //         delay(1000);
-    //         setSpeed(10);
-    //         moveForward();
-    //         break;
-    //     }
-    // case firstWALL:
-    //     {
-    //         Serial.println("inside first wall state");
-    //         num = communicate();
-    //         if(num == -1){
-    //             currentState = firstWALL; 
-    //         } else currentState = (State) num; 
-    //         motorsStop();
-    //         setSpeed(150);
-    //         moveBackward();
-    //         delay(1000);
-    //         turnL90();
-    //         delay(1000);
-    //         turnR90();
-    //         delay(1000);
-    //         break;
-    //     }
-    // case findCOLOR_X:
-    //     {            
-    //         //Serial.println("inside findColor_X state");
-    //         num = communicate();
-    //         if(num == -1){
-    //             currentState = findCOLOR_X; 
-    //         } else currentState = (State) num; 
-    //         leftMotorStop();
-    //         setLSpeed(50);
-    //         leftMotorBackward();
-    //         //delay(1000);
-    //         break;
-    //     }
-    // case laneFOLLOW_X:
-    //     {
-    //         //Serial.println("inside laneFollow_x state");
-    //         num = communicate();
-    //         if(num == -1){
-    //             currentState = laneFOLLOW_X; 
-    //         } else currentState = (State) num; 
-    //         setLSpeed(200);
-    //         leftMotorForward();
-    //         //delay(1000);
-    //         break;
-    //     }
-    // case findCOLOR_Y:
+    switch (currentState){
+    case START:
+        {
+            Serial.println("inside start state");
+            num = communicate();
+            if(num == -1){
+                currentState = START; 
+            } else currentState = (State) num; 
+            motorsStop();
+            setSpeed(10);
+            moveForward();
+            break;
+        }
+    case firstWALL:
+        {
+            Serial.println("inside first wall state");
+            num = communicate();
+            if(num == -1){
+                currentState = firstWALL; 
+            } else currentState = (State) num; 
+            motorsStop();
+            setSpeed(50);
+            moveBackward();
+            break;
+        }
+    case findCOLOR_X:
+        {            
+            //Serial.println("inside findColor_X state");
+            num = communicate();
+            if(num == -1){
+                currentState = findCOLOR_X; 
+            } else currentState = (State) num; 
+            leftMotorStop();
+            setLSpeed(50);
+            leftMotorBackward();
+            //delay(1000);
+            break;
+        }
+    case laneFOLLOW_X:
+        {
+            //Serial.println("inside laneFollow_x state");
+            num = communicate();
+            if(num == -1){
+                currentState = laneFOLLOW_X; 
+            } else currentState = (State) num; 
+            setLSpeed(200);
+            leftMotorForward();
+            //delay(1000);
+            break;
+        }
+    case findCOLOR_Y:
 
     //     //Serial.println("inside findColor_Y state");
     //     num = communicate();
@@ -203,9 +191,9 @@ void loop(){
     //     //delay(1000);
     //     break;
 
-    // default:
-    //     currentState = START;
-    //     break;
-    // }
+    default:
+        currentState = START;
+        break;
+    }
 
 }
