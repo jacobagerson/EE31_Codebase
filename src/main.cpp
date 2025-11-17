@@ -28,15 +28,17 @@ void setup() {
 	//initialize motor pins
 	setupMotorPins();
 
+
     pinMode(LED_BUILTIN, OUTPUT);
 
-    //setRSpeed(240);
+    setRSpeed(240);
+    setLSpeed(240);
 
     //Color Sensing
-    //setUpColorPins();
+    setUpColorPins();
 
 	//start websocket up
-    setupSocket();
+    //setupSocket();
     delay(2500);
 }
 
@@ -59,52 +61,17 @@ int communicate() {
 void loop(){
     int num = 0;
 
-    // int color[2] = {0};
+    //int color[2] = {0};
 
-    // while(1) {
-    //     getColor(color);
-    //     Serial.print("Sensor 1: ");
-    //     Serial.print(color[0]);
-    //     Serial.print(", Sensor 2: ");
-    //     Serial.println(color[1]);
-    //     delay(600);
-    // }
+    // to get a color just do: getColor(color);, where color[0] is the right hand side sensor
+    // and color[1] is the lefthand side sensor
 
     // digitalWrite(4, HIGH); //Enable = Yellow
     // digitalWrite(6, LOW); //Reference = white
     // analogWrite(5, 250); //PWM = Orange
 
-    // Serial.print(ir_read());
-    // Serial.print("\n");
-    // delay(200);
+    Serial.print(ir_read());
 
-    // digitalWrite(8, HIGH); //Enable = Yellow
-    // digitalWrite(10, LOW); //Reference = white
-    // analogWrite(9, 200); //PWM = Orange
-
-
-    // setLSpeed(150);
-    // leftMotorForward();
-    // delay(1000);
-    // motorsStop();
-    // delay(1000);
-
-	// if (ir_read() < 700) {
-	// 	leftMotorForward(150);
-	// 	leftMotorForward(150);
-	// } else {
-	// 	leftMotorStop();
-	// 	leftMotorStop();
-	// }
-
-    // float val = ir_read();
-    // Serial.print("Analong IR: ");
-    // Serial.println(val);
-    // while (wall_close())
-    // {
-    //     Serial.println("wall detected");
-    // }
-    
     //when moving along lanes, want to check our distance each step with the wall_close();
     //if we get this = true, then we can turn around/L/R and continue on with our bot motion
     //just set a global bool to help us change states
@@ -139,39 +106,39 @@ void loop(){
     // motorsStop();
     // delay(2000);
 
-    switch (currentState){
-    case START:
-        {
-            //Serial.println("inside start state");
-            num = communicate();
-            if(num == -1){
-                currentState = START; 
-            } else currentState = (State) num; 
-            //motorsStop();
-            delay(500);
-            //setSpeed(150);
-            Serial.println(ir_read());
+    // switch (currentState){
+    // case START:
+    //     {
+    //         //Serial.println("inside start state");
+    //         num = communicate();
+    //         if(num == -1){
+    //             currentState = START; 
+    //         } else currentState = (State) num; 
+    //         //motorsStop();
+    //         delay(500);
+    //         //setSpeed(150);
+    //         Serial.println(ir_read());
             
-            //turnL90();
-            //motorsStop();
-            delay(500);
-            break;
-        }
-    case firstWALL:
-        {
-            //Serial.println("inside first wall state");
-            num = communicate();
-            if(num == -1){
-                currentState = firstWALL; 
-            } else currentState = (State) num; 
-            motorsStop();
-            delay(500);
-            setSpeed(150);
-            turnR90();
-            //motorsStop();
-            delay(500);
-            break;
-        }
+    //         //turnL90();
+    //         //motorsStop();
+    //         delay(500);
+    //         break;
+    //     }
+    // case firstWALL:
+    //     {
+    //         //Serial.println("inside first wall state");
+    //         num = communicate();
+    //         if(num == -1){
+    //             currentState = firstWALL; 
+    //         } else currentState = (State) num; 
+    //         motorsStop();
+    //         delay(500);
+    //         setSpeed(150);
+    //         turnR90();
+    //         //motorsStop();
+    //         delay(500);
+    //         break;
+    //     }
     // case findCOLOR_X:
     //     {            
     //         //Serial.println("inside findColor_X state");
@@ -231,9 +198,9 @@ void loop(){
     //     //delay(1000);
     //     break;
 
-    default:
-        currentState = START;
-        break;
-    }
+    // default:
+    //     currentState = START;
+    //     break;
+    // }
 
 }
