@@ -112,4 +112,11 @@ void turnR90(){
     delay(550);
 }
 
- 
+void turn180(){
+    motorsStop();
+    setRSpeed(150);
+    setLSpeed(150);
+    rightMotorBackward();
+    leftMotorForward();
+    delay(1100);
+}

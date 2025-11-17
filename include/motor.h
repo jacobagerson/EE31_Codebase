@@ -16,5 +16,4 @@ void moveBackward();
 void setSpeed(uint8_t speed);
 void turnL90();
 void turnR90();
-void turnR90();
-void turnL90();
+void turn180();
