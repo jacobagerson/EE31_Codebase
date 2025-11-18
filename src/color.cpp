@@ -18,7 +18,6 @@ void setUpColorPins() {
 }
 
 
-
 void getColor(int color[2]) {
     int a_amb, b_amb, a_red, b_red, a_blue, b_blue;
 
