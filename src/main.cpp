@@ -69,7 +69,7 @@ void loop(){
     // digitalWrite(6, LOW); //Reference = white
     // analogWrite(5, 250); //PWM = Orange
 
-    Serial.print(ir_read());
+    Serial.println(ir_read());
 
     //when moving along lanes, want to check our distance each step with the wall_close();
     //if we get this = true, then we can turn around/L/R and continue on with our bot motion
@@ -82,7 +82,7 @@ void loop(){
     //     rightMotorForward();
     //     delay(200);
     // }
-    // motorsStop();
+    // motorsStop();,
     // delay(2000);
     // for(int i = 0; i < 10; i++){
     //     setSpeed(150);
