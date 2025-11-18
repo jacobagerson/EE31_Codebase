@@ -101,6 +101,7 @@ void turnL90(){
     rightMotorForward();
     leftMotorBackward();
     delay(550);
+    motorsStop();
 }
 
 void turnR90(){
@@ -110,6 +111,7 @@ void turnR90(){
     rightMotorBackward();
     leftMotorForward();
     delay(550);
+    motorsStop();
 }
 
 void turn180(){
@@ -119,4 +121,5 @@ void turn180(){
     rightMotorBackward();
     leftMotorForward();
     delay(1100);
+    motorsStop();
 }

@@ -60,8 +60,7 @@ int communicate() {
 
 void loop(){
     int num = 0;
-
-    //int color[2] = {0};
+    int color[2] = {0};
 
     // to get a color just do: getColor(color);, where color[0] is the right hand side sensor
     // and color[1] is the lefthand side sensor
