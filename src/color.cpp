@@ -39,8 +39,8 @@ void getColor(int color[2]) {
     digitalWrite(13, LOW);
 
     // debugging print 
-    //Serial.print("Sensor A:"); Serial.print(a_amb); Serial.print(", "); Serial.print(a_red); Serial.print(", "); Serial.println(a_blue); 
-    //Serial.print("Sensor B:"); Serial.print(b_amb); Serial.print(", "); Serial.print(b_red); Serial.print(", "); Serial.println(b_blue); 
+    // Serial.print("Sensor A:"); Serial.print(a_amb); Serial.print(", "); Serial.print(a_red); Serial.print(", "); Serial.println(a_blue); 
+    // Serial.print("Sensor B:"); Serial.print(b_amb); Serial.print(", "); Serial.print(b_red); Serial.print(", "); Serial.println(b_blue); 
         
 
     // calculates the angles of the vector created by 
@@ -50,6 +50,7 @@ void getColor(int color[2]) {
 
 
     //debugging print output values in degrees
+    // Serial.print("Red values: "); Serial.print(a_amb); Serial.print(", "); Serial.println(b_amb);
     Serial.print("Sensor A: "); Serial.println(a_angle);
     Serial.print("Sensor B: "); Serial.println(b_angle);
 
@@ -73,4 +74,12 @@ void getColor(int color[2]) {
 
     color[0] = a_bestLane; // 0=Black,1=Red,2=Blue,3=Yellow
     color[1] = b_bestLane;
+
+
+
+    //Color sensor values: 
+    Serial.print("Right Color Sensor: "); 
+    Serial.println(color[0]);
+    Serial.print("Left Color Sensor: "); 
+    Serial.println(color[1]);
 }
