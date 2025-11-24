@@ -58,13 +58,27 @@ void motorsStop() {
 }
 
 void moveForward(){
-    leftMotorForward();
-    rightMotorForward();
+    //left forward
+    digitalWrite(4, HIGH); //Set enable high
+    digitalWrite(6, LOW); //Set reference low
+    analogWrite(5, 150);
+
+    //right forward
+    digitalWrite(8, HIGH); //Set enable high
+    digitalWrite(10, LOW); //Set reference low
+    analogWrite(9, 150); //Set speed
 }
 
 void moveBackward(){
-    leftMotorBackward();
-    rightMotorBackward();
+    //left backward
+    digitalWrite(4, HIGH); //Set enable high
+    digitalWrite(6, HIGH); //Set reference high
+    analogWrite(5, 255 - 150); //Set speed
+
+    //right backward
+    digitalWrite(8, HIGH); //Set enable high
+    digitalWrite(10, HIGH); //Set reference high
+    analogWrite(9, 255 - 150); //Set speed
 }
 
 void setLSpeed(uint8_t speed){
