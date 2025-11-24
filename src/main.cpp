@@ -1,3 +1,5 @@
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
 #include "main.h"
 
 typedef enum { 
@@ -11,6 +13,21 @@ typedef enum {
 } State;
 
 State currentState = START;
+
+// 16x2 I2C LCD at address 0x27
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// show one or two lines of status on the LCD
+void lcdShowStatus(const char* line1, const char* line2 = "") {
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print(line1);
+
+    if (line2 && line2[0] != '\0') {
+        lcd.setCursor(0, 1);
+        lcd.print(line2);
+    }
+}
 
 void blink(int pin, int num){
     for(int i = 0; i < num; i++){
@@ -27,8 +44,6 @@ void setup() {
 
 	//initialize motor pins
 	setupMotorPins();
-
-
     pinMode(LED_BUILTIN, OUTPUT);
 
     setRSpeed(240);
@@ -40,6 +55,12 @@ void setup() {
 	//start websocket up
     //setupSocket();
     delay(2500);
+
+    lcd.init();       // initialize the lcd
+    lcd.backlight();  // open the backlight
+    lcdShowStatus("Booting...", "Please wait");
+    delay(500);
+    lcdShowStatus("Idle", "Waiting...");
 }
 
 int communicate() {
@@ -58,31 +79,27 @@ int communicate() {
 }
 
 
-void loop(){
+void loop() {
     int num = 0;
     int color[2] = {0};
 
-    // to get a color just do: getColor(color);, where color[0] is the right hand side sensor
-    // and color[1] is the lefthand side sensor
+    // to get a color just do: getColor(color);
+    // color[0] = right sensor, color[1] = left sensor
 
-    // digitalWrite(4, HIGH); //Enable = Yellow
-    // digitalWrite(6, LOW); //Reference = white
-    // analogWrite(5, 250); //PWM = Orange
+    Serial.println(ir_read());  
 
-    Serial.println(ir_read());
-
-    //when moving along lanes, want to check our distance each step with the wall_close();
-    //if we get this = true, then we can turn around/L/R and continue on with our bot motion
+    //when moving along lanes, want to check our distance each step with wall_close();
+    //if wall_close() == true, then turn around / L/R and continue with bot motion
     //just set a global bool to help us change states
 
- //   delay(1000);
+    // delay(1000);
     // for(int i = 0; i < 10; i++){
     //     setSpeed(150);
     //     leftMotorForward();
     //     rightMotorForward();
     //     delay(200);
     // }
-    // motorsStop();,
+    // motorsStop();
     // delay(2000);
     // for(int i = 0; i < 10; i++){
     //     setSpeed(150);
@@ -90,42 +107,32 @@ void loop(){
     //     rightMotorBackward();
     //     delay(200);
     // }
-
     // motorsStop();
     // setSpeed(150);
     // turnL90();
-    // // // leftMotorForward();
-    // // // rightMotorBackward();
     // motorsStop();
     // delay(2000);
     // setSpeed(150);
     // turnR90();
-    // // leftMotorBackward();
-    // // rightMotorForward();
     // motorsStop();
     // delay(2000);
 
     // switch (currentState){
     // case START:
     //     {
-    //         //Serial.println("inside start state");
     //         num = communicate();
     //         if(num == -1){
     //             currentState = START; 
     //         } else currentState = (State) num; 
-    //         //motorsStop();
     //         delay(500);
-    //         //setSpeed(150);
     //         Serial.println(ir_read());
-            
-    //         //turnL90();
-    //         //motorsStop();
+    //         lcdShowStatus("State: START", "Waiting...");
     //         delay(500);
     //         break;
     //     }
+
     // case firstWALL:
     //     {
-    //         //Serial.println("inside first wall state");
     //         num = communicate();
     //         if(num == -1){
     //             currentState = firstWALL; 
@@ -134,13 +141,13 @@ void loop(){
     //         delay(500);
     //         setSpeed(150);
     //         turnR90();
-    //         //motorsStop();
+    //         lcdShowStatus("firstWALL", "Turning right");
     //         delay(500);
     //         break;
     //     }
+
     // case findCOLOR_X:
     //     {            
-    //         //Serial.println("inside findColor_X state");
     //         num = communicate();
     //         if(num == -1){
     //             currentState = findCOLOR_X; 
@@ -148,53 +155,50 @@ void loop(){
     //         leftMotorStop();
     //         setLSpeed(50);
     //         leftMotorBackward();
-    //         //delay(1000);
+    //         lcdShowStatus("Find Color X", "Backing up");
     //         break;
     //     }
+
     // case laneFOLLOW_X:
     //     {
-    //         //Serial.println("inside laneFollow_x state");
     //         num = communicate();
     //         if(num == -1){
     //             currentState = laneFOLLOW_X; 
     //         } else currentState = (State) num; 
     //         setLSpeed(200);
     //         leftMotorForward();
-    //         //delay(1000);
+    //         lcdShowStatus("LaneFollow X", "Forward");
     //         break;
     //     }
+
     // case findCOLOR_Y:
-    //     //Serial.println("inside findColor_Y state");
     //     num = communicate();
     //     if(num == -1){
     //         currentState = findCOLOR_Y; 
     //     } else currentState = (State) num; 
     //     setLSpeed(255);
     //     leftMotorBackward();
-    //     //delay(1000);
+    //     lcdShowStatus("Find Color Y", "Backing up");
     //     break;
     
     // case laneFOLLOW_Y:
-    //     //Serial.println("inside laneFollow_y state");
     //     num = communicate();
     //     if(num == -1){
     //         currentState = laneFOLLOW_Y; 
     //     } else currentState = (State) num; 
     //     setLSpeed(50);
     //     leftMotorBackward();
-    //     //delay(1000);
+    //     lcdShowStatus("LaneFollow Y", "Backward");
     //     break;
 
     // case findSTART:
-
-    //     //Serial.println("inside findStart state");
     //     num = communicate();
     //     if(num == -1){
     //         currentState = findSTART; 
     //     } else currentState = (State) num; 
     //     setLSpeed(250);
     //     leftMotorForward();
-    //     //delay(1000);
+    //     lcdShowStatus("Find START", "Forward");
     //     break;
 
     // default:
