@@ -17,3 +17,5 @@ void setSpeed(uint8_t speed);
 void turnL90();
 void turnR90();
 void turn180();
+void turnRightSmall();
+void turnLeftSmall();

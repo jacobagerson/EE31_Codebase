@@ -9,7 +9,8 @@ typedef enum {
   laneFOLLOW_X,
   findCOLOR_Y,
   laneFOLLOW_Y,
-  findSTART 
+  findSTART, 
+  idle 
 } State;
 
 State currentState = START;
@@ -44,23 +45,19 @@ void setup() {
 
 	//initialize motor pins
 	setupMotorPins();
-    pinMode(LED_BUILTIN, OUTPUT);
-
-    setRSpeed(240);
-    setLSpeed(240);
 
     //Color Sensing
     setUpColorPins();
 
 	//start websocket up
-    //setupSocket();
-    delay(2500);
+    setupSocket();
+    //delay(2500);
 
-    lcd.init();       // initialize the lcd
-    lcd.backlight();  // open the backlight
-    lcdShowStatus("Booting...", "Please wait");
-    delay(500);
-    lcdShowStatus("Idle", "Waiting...");
+    // lcd.init();       // initialize the lcd
+    // lcd.backlight();  // open the backlight
+    // lcdShowStatus("Booting...", "Please wait");
+    // delay(500);
+    // lcdShowStatus("Idle", "Waiting...");
 }
 
 int communicate() {
@@ -86,124 +83,147 @@ void loop() {
     // to get a color just do: getColor(color);
     // color[0] = right sensor, color[1] = left sensor
 
-    Serial.println(ir_read());  
+    //Serial.println(ir_read());  
 
     //when moving along lanes, want to check our distance each step with wall_close();
     //if wall_close() == true, then turn around / L/R and continue with bot motion
     //just set a global bool to help us change states
 
-    // delay(1000);
-    // for(int i = 0; i < 10; i++){
-    //     setSpeed(150);
-    //     leftMotorForward();
-    //     rightMotorForward();
-    //     delay(200);
-    // }
-    // motorsStop();
-    // delay(2000);
-    // for(int i = 0; i < 10; i++){
-    //     setSpeed(150);
-    //     leftMotorBackward();
-    //     rightMotorBackward();
-    //     delay(200);
-    // }
-    // motorsStop();
-    // setSpeed(150);
-    // turnL90();
-    // motorsStop();
-    // delay(2000);
-    // setSpeed(150);
-    // turnR90();
-    // motorsStop();
-    // delay(2000);
+    switch (currentState){
+    case START:
+        {
+            // num = communicate();
+            // if(num == -1){
+            //     currentState = START; 
+            // } else currentState = (State) num; 
+            // delay(500);
+            // Serial.println(ir_read());
+            // lcdShowStatus("State: START", "Waiting...");
+            // delay(500);
+            // break;
 
-    // switch (currentState){
-    // case START:
-    //     {
-    //         num = communicate();
-    //         if(num == -1){
-    //             currentState = START; 
-    //         } else currentState = (State) num; 
-    //         delay(500);
-    //         Serial.println(ir_read());
-    //         lcdShowStatus("State: START", "Waiting...");
-    //         delay(500);
-    //         break;
-    //     }
 
-    // case firstWALL:
-    //     {
-    //         num = communicate();
-    //         if(num == -1){
-    //             currentState = firstWALL; 
-    //         } else currentState = (State) num; 
-    //         motorsStop();
-    //         delay(500);
-    //         setSpeed(150);
-    //         turnR90();
-    //         lcdShowStatus("firstWALL", "Turning right");
-    //         delay(500);
-    //         break;
-    //     }
 
-    // case findCOLOR_X:
-    //     {            
-    //         num = communicate();
-    //         if(num == -1){
-    //             currentState = findCOLOR_X; 
-    //         } else currentState = (State) num; 
-    //         leftMotorStop();
-    //         setLSpeed(50);
-    //         leftMotorBackward();
-    //         lcdShowStatus("Find Color X", "Backing up");
-    //         break;
-    //     }
+        }
 
-    // case laneFOLLOW_X:
-    //     {
-    //         num = communicate();
-    //         if(num == -1){
-    //             currentState = laneFOLLOW_X; 
-    //         } else currentState = (State) num; 
-    //         setLSpeed(200);
-    //         leftMotorForward();
-    //         lcdShowStatus("LaneFollow X", "Forward");
-    //         break;
-    //     }
+    case firstWALL:
+        {
+            num = communicate();
+            if(num == -1){
+                currentState = firstWALL; 
+            } else currentState = (State) num; 
+            motorsStop();
+            delay(500);
+            setSpeed(150);
+            turnR90();
+            lcdShowStatus("firstWALL", "Turning right");
+            delay(500);
 
-    // case findCOLOR_Y:
-    //     num = communicate();
-    //     if(num == -1){
-    //         currentState = findCOLOR_Y; 
-    //     } else currentState = (State) num; 
-    //     setLSpeed(255);
-    //     leftMotorBackward();
-    //     lcdShowStatus("Find Color Y", "Backing up");
-    //     break;
+            while(!wall_close()){
+                moveForward();
+                lcdShowStatus("firstWALL", "Moving to wall");
+            }
+            motorsStop();
+            delay(500);
+            writeMessage("Hit first wall.");
+            turnL90();
+            currentState = findCOLOR_X;
+            break;
+        }
+
+    case findCOLOR_X:
+        {            
+            num = communicate();
+            if(num == -1){
+                currentState = findCOLOR_X; 
+            } else currentState = (State) num; 
+            leftMotorStop();
+            setLSpeed(50);
+            leftMotorBackward();
+            lcdShowStatus("Find Color X", "Backing up");
+            break;
+        }
+
+    case laneFOLLOW_X:
+        {
+            // num = communicate();
+            // if(num == -1){
+            //     currentState = laneFOLLOW_X; 
+            // } else currentState = (State) num; 
+            //0 - black, 1 - red, 2 - blue, 3 - yellow
+            //color[0] = right 
+            //color[1] = left
+            lcdShowStatus("LaneFollow X", "Forward");
+            while(!wall_close()){
+                getColor(color);
+                if(color[0] == color[1] == 2){
+                    moveForward();
+                }
+                else if (color[0] == 0 && color[1] == 2){
+                    turnRightSmall();
+                }
+                else if (color[0] == 2 && color[1] == 0){
+                    turnLeftSmall();
+                }
+                else{
+                    moveForward();
+                }
+            }
+            if(wall_close()){
+                motorsStop();
+                delay(500);
+                writeMessage("Wall detected during lane follow X.");
+                turnL90();
+                //go to the yellow line
+                lcdShowStatus("Find Yellow", "Forward");
+                currentState = findCOLOR_Y;
+                break;
+            }
+            
+            break;
+        }
+
+    case findCOLOR_Y:
+        num = communicate();
+        if(num == -1){
+            currentState = findCOLOR_Y; 
+        } else currentState = (State) num; 
+        setLSpeed(255);
+        leftMotorBackward();
+        lcdShowStatus("Find Color Y", "Backing up");
+        break;
     
-    // case laneFOLLOW_Y:
-    //     num = communicate();
-    //     if(num == -1){
-    //         currentState = laneFOLLOW_Y; 
-    //     } else currentState = (State) num; 
-    //     setLSpeed(50);
-    //     leftMotorBackward();
-    //     lcdShowStatus("LaneFollow Y", "Backward");
-    //     break;
+    case laneFOLLOW_Y:
+        num = communicate();
+        if(num == -1){
+            currentState = laneFOLLOW_Y; 
+        } else currentState = (State) num; 
+        setLSpeed(50);
+        leftMotorBackward();
+        lcdShowStatus("LaneFollow Y", "Backward");
+        break;
 
-    // case findSTART:
-    //     num = communicate();
-    //     if(num == -1){
-    //         currentState = findSTART; 
-    //     } else currentState = (State) num; 
-    //     setLSpeed(250);
-    //     leftMotorForward();
-    //     lcdShowStatus("Find START", "Forward");
-    //     break;
+    case findSTART:
+        num = communicate();
+        if(num == -1){
+            currentState = findSTART; 
+        } else currentState = (State) num; 
+        setLSpeed(250);
+        leftMotorForward();
+        lcdShowStatus("Find START", "Forward");
+        break;
 
-    // default:
-    //     currentState = START;
-    //     break;
-    // }
+    case idle:
+        num = communicate();
+        if(num == -1){
+            currentState = idle; 
+        } else currentState = (State) num; 
+        motorsStop();
+        //lcdShowStatus("Idle", "Waiting...");
+        break;
+    default:
+        currentState = START;
+        break;
+    }
 
 }
