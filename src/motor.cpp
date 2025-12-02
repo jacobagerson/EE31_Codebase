@@ -129,7 +129,7 @@ void turnL90(){
     setLSpeed(100);
     rightMotorForward();
     leftMotorBackward();
-    delay(225);
+    delay(250);
     motorsStop();
 }
 
@@ -176,6 +176,6 @@ void turn180(){
     setLSpeed(100);
     rightMotorBackward();
     leftMotorForward();
-    delay(645);
+    delay(660);
     motorsStop();
 }

@@ -1,8 +1,8 @@
 #include "color.h"
 
-float   a_lane[4] = {25.40, 18.32, 44.23, 11.67};   // creates/stores average values for each LED in each condition. COLOR SENSOR 1
+float   a_lane[4] = {25.0, 20.0, 42.0, 13.0};   // creates/stores average values for each LED in each condition. COLOR SENSOR 1
 float   a_mag[4];             // creates the vector magnitudes between measured values and each average condition. COLOR SENSOR 1
-float   b_lane[4] = {51.8, 36, 58.13, 25.61};   // creates/stores average values for each LED in each condition. COLOR SENSOR 2
+float   b_lane[4] = {34.0, 27.0, 44.0, 22.0};   // creates/stores average values for each LED in each condition. COLOR SENSOR 2
 float   b_mag[4];
 int     a_bestLane;             // returned value for most likely lane
 float   a_bestValue;            // stores lowest magnitude for 'for' loop
@@ -48,11 +48,10 @@ void getColor(int color[2]) {
     float a_angle = atan2f((float)a_blue, (float)a_red)*(180/PI);
     float b_angle = atan2f((float)b_blue, (float)b_red)*(180/PI);
 
-
     //debugging print output values in degrees
     // Serial.print("Red values: "); Serial.print(a_amb); Serial.print(", "); Serial.println(b_amb);
-    Serial.print("Sensor A: "); Serial.println(a_angle);
-    Serial.print("Sensor B: "); Serial.println(b_angle);
+    // Serial.print("Sensor A: "); Serial.println(a_angle);
+    // Serial.print("Sensor B: "); Serial.println(b_angle);
 
 
     // takes the difference between teh measured angle
@@ -75,11 +74,9 @@ void getColor(int color[2]) {
     color[0] = a_bestLane; // 0=Black,1=Red,2=Blue,3=Yellow
     color[1] = b_bestLane;
 
-
-
-    //Color sensor values: 
-    Serial.print("Right Color Sensor: "); 
-    Serial.println(color[0]);
-    Serial.print("Left Color Sensor: "); 
-    Serial.println(color[1]);
+    // //Color sensor values: 
+    // Serial.print("Right Color Sensor: "); 
+    // Serial.println(color[0]);
+    // Serial.print("Left Color Sensor: "); 
+    // Serial.println(color[1]);
 }
