@@ -84,6 +84,18 @@ void moveSlow(){
     analogWrite(9, 50); //Set speed
 }
 
+void moveSlowR(){
+    //left forward
+    digitalWrite(4, HIGH); //Set enable high
+    digitalWrite(6, LOW); //Set reference low
+    analogWrite(5, 40);
+
+    //right forward
+    digitalWrite(8, HIGH); //Set enable high
+    digitalWrite(10, LOW); //Set reference low
+    analogWrite(9, 40); //Set speed
+}
+
 void moveBackward(){
     //left backward
     digitalWrite(4, HIGH); //Set enable high
@@ -129,10 +141,29 @@ void turnL90(){
     setLSpeed(100);
     rightMotorForward();
     leftMotorBackward();
-    delay(250);
+    delay(265);
     motorsStop();
 }
 
+void turnL135(){
+    motorsStop();
+    setRSpeed(150);
+    setLSpeed(100);
+    rightMotorForward();
+    leftMotorBackward();
+    delay(400);
+    motorsStop();
+}
+
+void turnR135(){
+    motorsStop();
+    setRSpeed(100);
+    setLSpeed(150);
+    rightMotorBackward();
+    leftMotorForward();
+    delay(400);
+    motorsStop();
+}
 
 void turnRightSmall(){
     motorsStop();
@@ -166,16 +197,26 @@ void turnR90(){
     setLSpeed(150);
     rightMotorBackward();
     leftMotorForward();
-    delay(225);
+    delay(215);
     motorsStop();
 }
 
-void turn180(){
+void turnL180(){
     motorsStop();
     setRSpeed(100);
     setLSpeed(100);
     rightMotorBackward();
     leftMotorForward();
-    delay(660);
+    delay(635);
+    motorsStop();
+}
+
+void turnR180(){
+    motorsStop();
+    setRSpeed(100);
+    setLSpeed(100);
+    leftMotorBackward();
+    rightMotorForward();
+    delay(645);
     motorsStop();
 }

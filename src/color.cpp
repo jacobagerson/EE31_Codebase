@@ -1,8 +1,8 @@
 #include "color.h"
 
-float   a_lane[4] = {25.0, 20.0, 42.0, 13.0};   // creates/stores average values for each LED in each condition. COLOR SENSOR 1
+float   a_lane[4] = {30.0, 26.0, 46.0, 19.0};   // creates/stores average values for each LED in each condition. COLOR SENSOR 1 black, red, blue, yellow
 float   a_mag[4];             // creates the vector magnitudes between measured values and each average condition. COLOR SENSOR 1
-float   b_lane[4] = {34.0, 27.0, 44.0, 22.0};   // creates/stores average values for each LED in each condition. COLOR SENSOR 2
+float   b_lane[4] = {50.0, 43.0, 54.0, 37.0};   // creates/stores average values for each LED in each condition. COLOR SENSOR 2
 float   b_mag[4];
 int     a_bestLane;             // returned value for most likely lane
 float   a_bestValue;            // stores lowest magnitude for 'for' loop
@@ -23,16 +23,19 @@ void getColor(int color[2]) {
 
     // reads values below
 
-    digitalWrite(13, HIGH); delay(25);
+    digitalWrite(13, HIGH); 
+    delay(25);
     a_amb = analogRead(A0);
     b_amb = analogRead(A1);
 
-    digitalWrite(7, HIGH); delay(25);
+    digitalWrite(7, HIGH); 
+    delay(25);
     a_red = analogRead(A0) - a_amb;
     b_red = analogRead(A1) - b_amb;
     digitalWrite(7, LOW);
 
-    digitalWrite(12, HIGH); delay(25);
+    digitalWrite(12, HIGH); 
+    delay(25);
     a_blue = analogRead(A0) - a_amb;
     b_blue = analogRead(A1) - b_amb;
     digitalWrite(12, LOW);
