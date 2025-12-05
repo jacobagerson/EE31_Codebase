@@ -56,12 +56,25 @@ String readMessage(){
     return response;
 }
 
-String parseID(String message) {
-    return message.substring(0, 12);
+String parseID(String message){
+    String result;
+    String temp = message.substring(0, 3);
+    if(temp == "Web"){
+        message.remove(0,3);
+        while(message[0] != '_'){
+            message.remove(0,1);
+        }
+        message.remove(0,1);
+    }
+    for(int i = 0; i < 12; i++){
+        result += message[i];
+    }
+    return result;
 }
 
-String getMessage(String message) {
-    int dotIndex = message.lastIndexOf('.');
-    if (dotIndex == -1) return ""; 
-    return message.substring(dotIndex + 1);
+String getMessage(String message){
+    while(message[0] != '.')
+        message.remove(0,1);
+    message.remove(0,1);
+    return message;
 }

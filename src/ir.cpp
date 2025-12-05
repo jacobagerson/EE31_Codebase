@@ -13,7 +13,7 @@ void irISR() {
 
 bool wall_close() {
     float check_distance = analogRead(A3);
-    if (check_distance <= 40.0) { //19 or less, something is close to our bot
+    if (check_distance < 30.0) { //19 or less, something is close to our bot
         delay(10);
         return true;
     } else {

@@ -52,6 +52,8 @@ void setup() {
 
 	//initialize motor pins
 	setupMotorPins();
+    pinMode(2, OUTPUT);
+    digitalWrite(2, HIGH);
 
     //Color Sensing
     setUpColorPins();
@@ -88,10 +90,10 @@ void loop() {
     int num = 0;
     int color[2] = {0};
 
-    // // to get a color just do: getColor(color);
-    // // color[0] = right sensor, color[1] = left sensor
+    // to get a color just do: getColor(color);
+    // color[0] = right sensor, color[1] = left sensor
 
-    // // //Serial.println(ir_read());  
+    // //Serial.println(ir_read());  
     // getColor(color);
     // String left = "Left Color Sensor: " + (String)(color[1]);
     // String right = "Right Color Sensor: " + (String)(color[0]);
@@ -99,9 +101,10 @@ void loop() {
     // writeMessage(right);
     // delay(50);
 
-    // int a_amb, b_amb, a_red, b_red, a_blue, b_blue;
+    
 
     // // reads values below
+    // int a_amb, b_amb, a_red, b_red, a_blue, b_blue;
 
     // digitalWrite(13, HIGH); delay(25);
     // a_amb = analogRead(A0);
@@ -118,24 +121,28 @@ void loop() {
     // digitalWrite(12, LOW);
     // digitalWrite(13, LOW);
 
-    // // Serial.println(ir_read());
-    // // delay(200);
-
-    // //writeMessage("IR Read: " + String(ir_read()));
-
-
-    // // // // debugging print 
-    // // // // Serial.print("Sensor A:"); Serial.print(a_amb); Serial.print(", "); Serial.print(a_red); Serial.print(", "); Serial.println(a_blue); 
-    // // // // Serial.print("Sensor B:"); Serial.print(b_amb); Serial.print(", "); Serial.print(b_red); Serial.print(", "); Serial.println(b_blue); 
-        
-
-    // // // calculates the angles of the vector created by 
-    // // // the sensor reads
     // float a_angle = atan2f((float)a_blue, (float)a_red)*(180/PI);
     // float b_angle = atan2f((float)b_blue, (float)b_red)*(180/PI);
 
-    // writeMessage("Sensor A Angle: " + String(a_angle));
-    // writeMessage("Sensor B Angle: " + String(b_angle));
+    // writeMessage("Sensor A: " + String(a_angle));
+    // writeMessage("Sensor B: " + String(b_angle));
+
+    // Serial.println(ir_read());
+    // delay(200);
+
+    //writeMessage("IR Read: " + String(ir_read()));
+
+    //moveForward();
+
+
+    // // // debugging print 
+    // // // Serial.print("Sensor A:"); Serial.print(a_amb); Serial.print(", "); Serial.print(a_red); Serial.print(", "); Serial.println(a_blue); 
+    // // // Serial.print("Sensor B:"); Serial.print(b_amb); Serial.print(", "); Serial.print(b_red); Serial.print(", "); Serial.println(b_blue); 
+        
+
+    // // calculates the angles of the vector created by 
+    // // // the sensor reads
+
 
     switch (currentState){
     case START:
@@ -165,13 +172,16 @@ void loop() {
             lcdShowStatus("firstWALL", "Moving to wall");
             while(!wall_close()){
                 moveForward();
-                writeMessage((String)ir_read());
+                //writeMessage((String)ir_read());
             }
             writeMessage(String(ir_read()));
             motorsStop();
             delay(500);
             writeMessage("Hit first wall.");
             lcdShowStatus("firstWALL", "Hit first wall");
+            moveBackward();
+            delay(200);
+            motorsStop();
             //Serial.println(getMessage(readMessage()));
             turnL180();
             delay(200);
@@ -191,10 +201,10 @@ void loop() {
             //delay(500);
             while(!wall_close()){
                 moveForward();
-                writeMessage((String)ir_read());
+                //writeMessage((String)ir_read());
                 lcdShowStatus("firstWALL", "Moving to wall");
             }
-            writeMessage(String(ir_read()));
+            //writeMessage(String(ir_read()));
             motorsStop();
             moveBackward();
             delay(200);
@@ -227,10 +237,10 @@ void loop() {
             while(color[0] != 1 || color[1] != 1){
                 moveSlowR();
                 getColor(color);
-                String left = "Left Color Sensor: " + (String)(color[1]);
-                String right = "Right Color Sensor: " + (String)(color[0]);
-                writeMessage(left);
-                writeMessage(right);
+                // String left = "Left Color Sensor: " + (String)(color[1]);
+                // String right = "Right Color Sensor: " + (String)(color[0]);
+                // writeMessage(left);
+                // writeMessage(right);
                 lcdShowStatus("", "Finding Red");
                 //writeMessage((String)ir_read());
                 //lcdShowStatus("firstWALL", "Moving to wall");
@@ -245,6 +255,9 @@ void loop() {
             //     turnLeftSmall();
             //     getColor(color);
             // }
+            // moveBackward();
+            // delay(200);
+            // motorsStop();
             turnL90();
             delay(200);
             currentState = followRed;
@@ -264,10 +277,10 @@ void loop() {
             lcdShowStatus("", "Follow Red Lane");
             while(!wall_close()){
                 getColor(color);
-                String left = "Left Color Sensor: " + (String)(color[1]);
-                String right = "Right Color Sensor: " + (String)(color[0]);
-                writeMessage(left);
-                writeMessage(right);
+                // String left = "Left Color Sensor: " + (String)(color[1]);
+                // String right = "Right Color Sensor: " + (String)(color[0]);
+                // writeMessage(left);
+                // writeMessage(right);
                 if (color[0] == 0 && color[1] == 1){
                     turnLeftSmall();
                     moveSlow();
@@ -319,10 +332,10 @@ void loop() {
             while(color[0] != 2 || color[1] != 2){
                 moveSlow();
                 getColor(color);
-                String left = "Left Color Sensor: " + (String)(color[1]);
-                String right = "Right Color Sensor: " + (String)(color[0]);
-                writeMessage(left);
-                writeMessage(right);
+                // String left = "Left Color Sensor: " + (String)(color[1]);
+                // String right = "Right Color Sensor: " + (String)(color[0]);
+                // writeMessage(left);
+                // writeMessage(right);
                 //writeMessage((String)ir_read());
                 //lcdShowStatus("firstWALL", "Moving to wall");
             }
@@ -332,6 +345,9 @@ void loop() {
             lcdShowStatus("", "Found Blue");
             //Serial.println(getMessage(readMessage()));
             turnR90();
+            // moveBackward();
+            // delay(200);
+            // motorsStop();
             delay(200);
             currentState = followBlue;
             break;
@@ -350,10 +366,10 @@ void loop() {
             writeMessage("Following blue lane.");
             while(!wall_close()){
                 getColor(color);
-                String left = "Left Color Sensor: " + (String)(color[1]);
-                String right = "Right Color Sensor: " + (String)(color[0]);
-                writeMessage(left);
-                writeMessage(right);
+                // String left = "Left Color Sensor: " + (String)(color[1]);
+                // String right = "Right Color Sensor: " + (String)(color[0]);
+                // writeMessage(left);
+                // writeMessage(right);
                 if (color[0] == 0 && color[1] == 2){
                     turnLeftSmall();
                     moveSlow();
@@ -396,10 +412,10 @@ void loop() {
             while(color[0] != 3 || color[1] != 3){
                 moveSlow();
                 getColor(color);
-                String left = "Left Color Sensor: " + (String)(color[1]);
-                String right = "Right Color Sensor: " + (String)(color[0]);
-                writeMessage(left);
-                writeMessage(right);
+                // String left = "Left Color Sensor: " + (String)(color[1]);
+                // String right = "Right Color Sensor: " + (String)(color[0]);
+                // writeMessage(left);
+                // writeMessage(right);
                 //writeMessage((String)ir_read());
                 //lcdShowStatus("firstWALL", "Moving to wall");
             }
@@ -408,6 +424,9 @@ void loop() {
             writeMessage("Hit yellow strip.");
             lcdShowStatus("","Hit Yellow");
             //Serial.println(getMessage(readMessage()));
+            // moveBackward();
+            // delay(200);
+            // motorsStop();
             turnL90();
             delay(200);
             currentState = followYellow_R;
@@ -425,10 +444,10 @@ void loop() {
             lcdShowStatus("Follow Yellow", "");
             while(!wall_close()){
                 getColor(color);
-                String left = "Left Color Sensor: " + (String)(color[1]);
-                String right = "Right Color Sensor: " + (String)(color[0]);
-                writeMessage(left);
-                writeMessage(right);
+                // String left = "Left Color Sensor: " + (String)(color[1]);
+                // String right = "Right Color Sensor: " + (String)(color[0]);
+                // writeMessage(left);
+                // writeMessage(right);
                 if (color[0] == 0 && color[1] == 3){
                     turnLeftSmall();
                     moveSlow();
@@ -447,6 +466,9 @@ void loop() {
             writeMessage("Hit yellow wall");
             lcdShowStatus("", "Hit Wall");
             //delay(5000);
+            moveBackward();
+            delay(200);
+            motorsStop();
             turnL90();
             delay(200);
             currentState = finish;
@@ -469,10 +491,10 @@ void loop() {
             while(color[0] != 3 || color[1] != 3){
                 moveSlow();
                 getColor(color);
-                String left = "Left Color Sensor: " + (String)(color[1]);
-                String right = "Right Color Sensor: " + (String)(color[0]);
-                writeMessage(left);
-                writeMessage(right);
+                // String left = "Left Color Sensor: " + (String)(color[1]);
+                // String right = "Right Color Sensor: " + (String)(color[0]);
+                // writeMessage(left);
+                // writeMessage(right);
                 //writeMessage((String)ir_read());
                 //lcdShowStatus("firstWALL", "Moving to wall");
             }
@@ -481,6 +503,9 @@ void loop() {
             writeMessage("Hit yellow strip.");
             lcdShowStatus("","Hit Yellow");
             //Serial.println(getMessage(readMessage()));
+            // moveBackward();
+            // delay(200);
+            // motorsStop();
             turnR90();
             delay(200);
             currentState = followYellow_B;
@@ -496,10 +521,10 @@ void loop() {
             lcdShowStatus("Follow Yellow", "");
             while(!wall_close()){
                 getColor(color);
-                String left = "Left Color Sensor: " + (String)(color[1]);
-                String right = "Right Color Sensor: " + (String)(color[0]);
-                writeMessage(left);
-                writeMessage(right);
+                // String left = "Left Color Sensor: " + (String)(color[1]);
+                // String right = "Right Color Sensor: " + (String)(color[0]);
+                // writeMessage(left);
+                // writeMessage(right);
                 if (color[0] == 0 && color[1] == 3){
                     turnLeftSmall();
                     moveSlow();
@@ -516,7 +541,7 @@ void loop() {
             }
             motorsStop();
             writeMessage("Hit yellow wall");
-            //delay(5000);
+            delay(5000);
             moveBackward();
             delay(100);
             motorsStop();
