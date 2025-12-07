@@ -17,7 +17,7 @@ typedef enum {
     laneFOLLOW_Y,
     findSTART, 
     finish,
-    idle_duo, //15
+    idle_duo, //14
     idle
 } State;
 
@@ -75,7 +75,6 @@ int communicate() {
     if (message.length() > 0 && parseID(message) == "8050D1451904") {
         String stateStr = getMessage(message);
         state = stateStr.toInt();
-        //Serial.println(state);
     }  
     return state;
 }
@@ -84,10 +83,9 @@ int communicate() {
 int communicate_duo() {
     String message = readMessage();
     int state = -1;
-    if (message.length() == 1 && parseID(message) == "89C87865077A") {
+    if (parseID(message) == "89C87865077A" && message.length() == 1) {
         String stateStr = getMessage(message);
         state = stateStr.toInt();
-        //Serial.println(state);
     }
     else {
         return -1; 
@@ -111,8 +109,6 @@ void loop() {
     // writeMessage(left);
     // writeMessage(right);
     // delay(50);
-
-    
 
     // reads values below
     // int a_amb, b_amb, a_red, b_red, a_blue, b_blue;
@@ -172,10 +168,6 @@ void loop() {
             } else currentState = (State) num; 
             motorsStop();
             delay(500);
-            //setSpeed(150);
-            //turnR90();
-            //lcdShowStatus("firstWALL", "Turning right");
-            //delay(500);
             lcdShowStatus("firstWALL", "Moving to wall");
             while(!wall_close()){
                 moveForward();
@@ -196,25 +188,12 @@ void loop() {
             break;
         }
     case firstWALL_B: {
-            //wait for 2 command from them. 
-            //SEND SIGNAL THAT WE ARE GOING 
-            //writeMessage("RIDJ 2");
-
-            // if(num == -1){
-            //     currentState = firstWALL_B; 
-            // } else currentState = (State) num; 
             motorsStop();
             delay(500);
-            //setSpeed(150);
-            //turnR90();
-            //lcdShowStatus("firstWALL", "Turning right");
-            //delay(500);
             while(!wall_close()){
                 moveForward();
-                //writeMessage((String)ir_read());
                 lcdShowStatus("firstWALL", "Moving to wall");
             }
-            //writeMessage(String(ir_read()));
             motorsStop();
             moveBackward();
             delay(200);
@@ -234,12 +213,6 @@ void loop() {
             } else currentState = (State) num; 
             motorsStop();
             delay(500);
-            // moveForward();
-            // delay(2000);
-            //setSpeed(150);
-            //turnR90();
-            //lcdShowStatus("firstWALL", "Turning right");
-            //delay(500);
             moveForward();
             delay(1500);
             getColor(color);
@@ -259,13 +232,6 @@ void loop() {
             lcdShowStatus("", "Found Red");
             //WRITE MESSAGE to OTHER bot saying to go
             writeMessage("red lane found");
-            //writeMessage("RIDJ 1");
-            //Serial.println(getMessage(readMessage()));
-            // getColor(color);
-            // while(color[1] == 1){
-            //     turnLeftSmall();
-            //     getColor(color);
-            // }
             moveBackward();
             delay(200);
             motorsStop();
@@ -276,14 +242,6 @@ void loop() {
         }
     case followRed:
         {
-            // num = communicate();
-            // if(num == -1){
-            //     currentState = laneFOLLOW_X; 
-            // } else currentState = (State) num; 
-            //0 - black, 1 - red, 2 - blue, 3 - yellow
-            //color[0] = right 
-            //color[1] = left
-            //lcdShowStatus("LaneFollow X", "Forward");
             writeMessage("Following red lane.");
             lcdShowStatus("", "Follow Red Lane");
             while(!wall_close()){
@@ -330,12 +288,6 @@ void loop() {
             } else currentState = (State) num; 
             motorsStop();
             delay(500);
-            // moveForward();
-            // delay(2000);
-            //setSpeed(150);
-            //turnR90();
-            //lcdShowStatus("firstWALL", "Turning right");
-            //delay(500);
             moveForward();
             delay(1500);
             getColor(color);
@@ -352,28 +304,19 @@ void loop() {
             }
             motorsStop();
             delay(500);
+            //WRITE MESSAGE THAT WE ARE ON BLUE LANE
             writeMessage("blue lane found");
             lcdShowStatus("", "Found Blue");
-            //Serial.println(getMessage(readMessage()));
             turnR90();
             moveBackward();
             delay(200);
             motorsStop();
             delay(200);
-            //WRITE MESSAGE THAT WE ARE ON BLUE LANE
-            delay(500);
             currentState = followBlue;
             break;
     }
     case followBlue:
         {
-            // num = communicate();
-            // if(num == -1){
-            //     currentState = laneFOLLOW_X; 
-            // } else currentState = (State) num; 
-            //0 - black, 1 - red, 2 - blue, 3 - yellow
-            //color[0] = right 
-            //color[1] = left
             lcdShowStatus("Lane Follow", "Follow Blue");
             writeMessage("Following blue lane.");
             while(!wall_close()){
@@ -406,10 +349,6 @@ void loop() {
 
                 turnR135();
                 currentState = findYellow_B;
-                // //go to the yellow line
-                // lcdShowStatus("Find Yellow", "Forward");
-                // currentState = findCOLOR_Y;
-                // break;
             }
             break;
         }
@@ -435,7 +374,6 @@ void loop() {
             delay(500);
             writeMessage("Hit yellow strip.");
             lcdShowStatus("","Hit Yellow");
-            //Serial.println(getMessage(readMessage()));
             moveBackward();
             delay(200);
             motorsStop();
@@ -447,11 +385,6 @@ void loop() {
         }
     case followYellow_R:
         {            
-            // num = communicate();
-            // if(num == -1){
-            //     currentState = findCOLOR_X; 
-            // } else currentState = (State) num; 
-            //looking for red
             writeMessage("Follow yellow");
             lcdShowStatus("Follow Yellow", "");
             while(!wall_close()){
@@ -477,18 +410,12 @@ void loop() {
             motorsStop();
             writeMessage("Hit yellow wall");
             lcdShowStatus("", "Hit Wall");
-            //delay(5000);
             moveBackward();
             delay(200);
             motorsStop();
             turnL90();
             delay(200);
             currentState = finish;
-            //currentState = 1;
-            // leftMotorStop();
-            // setLSpeed(50);
-            // leftMotorBackward();
-            // lcdShowStatus("Find Color X", "Backing up");
             break;
         }
     case findYellow_B:
@@ -513,7 +440,6 @@ void loop() {
             delay(500);
             writeMessage("Hit yellow strip.");
             lcdShowStatus("","Hit Yellow");
-            //Serial.println(getMessage(readMessage()));
             moveBackward();
             delay(200);
             motorsStop();
@@ -525,10 +451,6 @@ void loop() {
 
     case followYellow_B:
         {            
-            // num = communicate();
-            // if(num == -1){
-            //     currentState = findCOLOR_X; 
-            // } else currentState = (State) num; 
             lcdShowStatus("Follow Yellow", "");
             while(!wall_close()){
                 getColor(color);
@@ -552,18 +474,12 @@ void loop() {
             }
             motorsStop();
             writeMessage("Hit yellow wall");
-            //delay(5000);
             moveBackward();
             delay(100);
             motorsStop();
             turnR90();
             delay(200);
             currentState = finish;
-            //currentState = 1;
-            // leftMotorStop();
-            // setLSpeed(50);
-            // leftMotorBackward();
-            // lcdShowStatus("Find Color X", "Backing up");
             break;
         }
     case finish:{
@@ -573,7 +489,6 @@ void loop() {
         motorsStop();
         lcdShowStatus("Finished", "Task complete");
         writeMessage("returned");
-        //RETURNED HOME
         currentState = idle;
         break;
     }     
