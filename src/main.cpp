@@ -234,7 +234,7 @@ void loop() {
             moveForward();
             delay(1500);
             getColor(color);
-            while(color[0] != 1 || color[1] != 1){
+            while(color[0] != RED || color[1] != RED){
                 moveSlowR();
                 getColor(color);
                 // String left = "Left Color Sensor: " + (String)(color[1]);
@@ -281,12 +281,12 @@ void loop() {
                 // String right = "Right Color Sensor: " + (String)(color[0]);
                 // writeMessage(left);
                 // writeMessage(right);
-                if (color[0] == 0 && color[1] == 1){
+                if (color[0] == BLACK && color[1] == RED){
                     turnLeftSmall();
                     moveSlow();
                     delay(25);
                 }
-                else if (color[0] == 1 && color[1] == 0){
+                else if (color[0] == RED && color[1] == RED){
                     turnRightSmall();
                     moveSlow();
                     delay(25);
@@ -329,7 +329,7 @@ void loop() {
             delay(1500);
             getColor(color);
             lcdShowStatus("", "Find Blue");
-            while(color[0] != 2 || color[1] != 2){
+            while(color[0] != BLUE || color[1] != BLUE){
                 moveSlow();
                 getColor(color);
                 // String left = "Left Color Sensor: " + (String)(color[1]);
@@ -370,12 +370,12 @@ void loop() {
                 // String right = "Right Color Sensor: " + (String)(color[0]);
                 // writeMessage(left);
                 // writeMessage(right);
-                if (color[0] == 0 && color[1] == 2){
+                if (color[0] == BLACK && color[1] == BLUE){
                     turnLeftSmall();
                     moveSlow();
                     delay(25);
                 }
-                else if (color[0] == 2 && color[1] == 0){
+                else if (color[0] == BLUE && color[1] == BLACK){
                     turnRightSmall();
                     moveSlow();
                     delay(25);
@@ -409,7 +409,7 @@ void loop() {
             } else currentState = (State) num; 
             lcdShowStatus("Find Yellow", "");
             getColor(color);
-            while(color[0] != 3 || color[1] != 3){
+            while(color[0] != YELLOW || color[1] != YELLOW){
                 moveSlow();
                 getColor(color);
                 // String left = "Left Color Sensor: " + (String)(color[1]);
@@ -448,12 +448,12 @@ void loop() {
                 // String right = "Right Color Sensor: " + (String)(color[0]);
                 // writeMessage(left);
                 // writeMessage(right);
-                if (color[0] == 0 && color[1] == 3){
+                if (color[0] == BLACK && color[1] == YELLOW){
                     turnLeftSmall();
                     moveSlow();
                     delay(25);
                 }
-                else if (color[0] == 3 && color[1] == 0){
+                else if (color[0] == YELLOW && color[1] == BLACK){
                     turnRightSmall();
                     moveSlow();
                     delay(25);
@@ -488,7 +488,7 @@ void loop() {
             } else currentState = (State) num; 
             lcdShowStatus("Find Yellow", "");
             getColor(color);
-            while(color[0] != 3 || color[1] != 3){
+            while(color[0] != YELLOW || color[1] != YELLOW){
                 moveSlow();
                 getColor(color);
                 // String left = "Left Color Sensor: " + (String)(color[1]);
@@ -525,12 +525,12 @@ void loop() {
                 // String right = "Right Color Sensor: " + (String)(color[0]);
                 // writeMessage(left);
                 // writeMessage(right);
-                if (color[0] == 0 && color[1] == 3){
+                if (color[0] == BLACK && color[1] == YELLOW){
                     turnLeftSmall();
                     moveSlow();
                     delay(25);
                 }
-                else if (color[0] == 3 && color[1] == 0){
+                else if (color[0] == YELLOW && color[1] == BLACK){
                     turnRightSmall();
                     moveSlow();
                     delay(25);
