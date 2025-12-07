@@ -7,6 +7,7 @@ int port = 8080;
 WiFiClient wifi;
 WebSocketClient client = WebSocketClient(wifi, serverAddress, port);
 String clientID = "8050D1451904"; //Insert your Server ID Here!
+String clientID_RIDGE = "89C87865077A"; //Insert your Server ID Here!
 int status = WL_IDLE_STATUS;
 int count = 0;
 
