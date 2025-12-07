@@ -145,6 +145,16 @@ void turnL90(){
     motorsStop();
 }
 
+void turnLSmall(){
+    motorsStop();
+    setRSpeed(150);
+    setLSpeed(100);
+    rightMotorForward();
+    leftMotorBackward();
+    delay(180);
+    motorsStop();
+}
+
 void turnL135(){
     motorsStop();
     setRSpeed(150);

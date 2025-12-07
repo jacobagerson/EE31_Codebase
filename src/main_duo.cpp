@@ -79,16 +79,15 @@ int communicate() {
     return state;
 }
 
-
 int communicate_duo() {
     String message = readMessage();
+    // writeMessage((message));
+    // writeMessage("Duo communicate received: " + message);
     int state = -1;
-    if (parseID(message) == "89C87865077A" && message.length() == 1) {
+    writeMessage(parseID(message));
+    if (message.length() > 0 && parseID(message) == "89C87865077A") {
         String stateStr = getMessage(message);
         state = stateStr.toInt();
-    }
-    else {
-        return -1; 
     }
     return state; 
 }
@@ -128,6 +127,12 @@ void loop() {
     // digitalWrite(12, LOW);
     // digitalWrite(13, LOW);
 
+    // float a_angle = atan2f((float)a_blue, (float)a_red)*(180/PI);
+    // float b_angle = atan2f((float)b_blue, (float)b_red)*(180/PI);
+
+    // writeMessage("Sensor A Angle: " + String(a_angle));
+    // writeMessage("Sensor B Angle: " + String(b_angle));
+
     // Serial.println(ir_read());
     // delay(200);
 
@@ -141,11 +146,7 @@ void loop() {
 
     // calculates the angles of the vector created by 
     // // the sensor reads
-    // float a_angle = atan2f((float)a_blue, (float)a_red)*(180/PI);
-    // float b_angle = atan2f((float)b_blue, (float)b_red)*(180/PI);
 
-    // writeMessage("Sensor A Angle: " + String(a_angle));
-    // writeMessage("Sensor B Angle: " + String(b_angle));
 
     switch (currentState){
     case START:
@@ -232,10 +233,11 @@ void loop() {
             lcdShowStatus("", "Found Red");
             //WRITE MESSAGE to OTHER bot saying to go
             writeMessage("red lane found");
+            writeMessage("RIDJ 1");
             moveBackward();
             delay(200);
             motorsStop();
-            turnL90();
+            turnLSmall();
             delay(200);
             currentState = followRed;
             break;
@@ -246,10 +248,10 @@ void loop() {
             lcdShowStatus("", "Follow Red Lane");
             while(!wall_close()){
                 getColor(color);
-                // String left = "Left Color Sensor: " + (String)(color[1]);
-                // String right = "Right Color Sensor: " + (String)(color[0]);
-                // writeMessage(left);
-                // writeMessage(right);
+                String left = "Left Color Sensor: " + (String)(color[1]);
+                String right = "Right Color Sensor: " + (String)(color[0]);
+                writeMessage(left);
+                writeMessage(right);
                 if (color[0] == 0 && color[1] == 1){
                     turnLeftSmall();
                     moveSlow();
@@ -306,6 +308,7 @@ void loop() {
             delay(500);
             //WRITE MESSAGE THAT WE ARE ON BLUE LANE
             writeMessage("blue lane found");
+            writeMessage("RIDJ 5");
             lcdShowStatus("", "Found Blue");
             turnR90();
             moveBackward();
@@ -374,9 +377,9 @@ void loop() {
             delay(500);
             writeMessage("Hit yellow strip.");
             lcdShowStatus("","Hit Yellow");
-            moveBackward();
-            delay(200);
-            motorsStop();
+            //moveBackward();
+            //delay(200);
+            //motorsStop();
             turnL90();
             delay(200);
             //DELAY UNTIL BOT 2 sends signal to follow yellow B
@@ -440,9 +443,9 @@ void loop() {
             delay(500);
             writeMessage("Hit yellow strip.");
             lcdShowStatus("","Hit Yellow");
-            moveBackward();
-            delay(200);
-            motorsStop();
+            //moveBackward();
+            //delay(200);
+            //motorsStop();
             turnR90();
             delay(200);
             currentState = followYellow_B;
@@ -488,15 +491,20 @@ void loop() {
         }
         motorsStop();
         lcdShowStatus("Finished", "Task complete");
-        writeMessage("returned");
+        //writeMessage("returned");
+        writeMessage("RIDJ 5");
         currentState = idle;
         break;
     }     
     case idle_duo: {
         num_duo = communicate_duo();
-        if(num == -1){
+        //writeMessage("Duo state received: " + String(num_duo));
+        if(num_duo != 8 || num_duo!= 2 || num_duo != 14 || num_duo == -1){
             currentState = idle_duo; 
-        } else currentState = (State) num; 
+        } else {
+            writeMessage("Duo changing state to: " + String(num_duo));
+            currentState = (State) num_duo; 
+        }
         motorsStop();
         lcdShowStatus("Idle Duo", "Waiting...");
         break;

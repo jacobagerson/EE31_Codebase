@@ -57,20 +57,13 @@ String readMessage(){
     return response;
 }
 
-String parseID(String message){
-    String result;
-    String temp = message.substring(0, 3);
-    if(temp == "Web"){
-        message.remove(0,3);
-        while(message[0] != '_'){
-            message.remove(0,1);
-        }
-        message.remove(0,1);
+String parseID(String message) {
+    int underscoreIndex = message.indexOf('_');   // Find "_"
+    if (underscoreIndex == -1) {
+        // No underscore found → return empty or entire string (your choice)
+        return message;
     }
-    for(int i = 0; i < 12; i++){
-        result += message[i];
-    }
-    return result;
+    return message.substring(0, underscoreIndex);  // Everything before "_"
 }
 
 String getMessage(String message){

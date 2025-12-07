@@ -24,3 +24,4 @@ void turnR180();
 void turnL180();
 void turnRightSmall();
 void turnLeftSmall();
+void turnLSmall();
