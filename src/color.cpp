@@ -1,8 +1,8 @@
 #include "color.h"
 
-float   a_lane[4] = {29.0, 26, 43, 20};   // creates/stores average values for each LED in each condition. COLOR SENSOR 1 black, red, blue, yellow
+float   a_lane[4] = {28.0, 26, 43, 21};   // creates/stores average values for each LED in each condition. COLOR SENSOR 1 black, red, blue, yellow
 float   a_mag[4];             // creates the vector magnitudes between measured values and each average condition. COLOR SENSOR 1
-float   b_lane[4] = {37, 34, 41, 31};   // creates/stores average values for each LED in each condition. COLOR SENSOR 2
+float   b_lane[4] = {35, 32.5, 39, 30};   // creates/stores average values for each LED in each condition. COLOR SENSOR 2
 float   b_mag[4];
 int     a_bestLane;             // returned value for most likely lane
 float   a_bestValue;            // stores lowest magnitude for 'for' loop

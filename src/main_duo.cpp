@@ -3,7 +3,7 @@
 #include "main.h"
 
 typedef enum { 
-    START, 
+    idle, 
     firstWALL_R,
     firstWALL_B, //2
     findRed,
@@ -17,9 +17,9 @@ typedef enum {
     laneFOLLOW_Y,
     findSTART, 
     finish,
-    idle_duo, //14
-    idle
+    idle_duo //14
 } State;
+
 
 State currentState = idle;
 
@@ -148,19 +148,7 @@ void loop() {
     // // the sensor reads
 
 
-    switch (currentState){
-    case START:
-        {
-            // num = communicate();
-            // if(num == -1){
-            //     currentState = START; 
-            // } else currentState = (State) num; 
-            // delay(500);
-            // Serial.println(ir_read());
-            // lcdShowStatus("State: START", "Waiting...");
-            // delay(500);
-            // break;
-        }
+    switch (currentState) {
     case firstWALL_R:
         {
             num = communicate();
@@ -237,7 +225,9 @@ void loop() {
             moveBackward();
             delay(200);
             motorsStop();
-            turnL90();
+            turnLSmall();
+            moveMedium();
+            delay(25);
             delay(200);
             currentState = followRed;
             break;
@@ -248,19 +238,19 @@ void loop() {
             lcdShowStatus("", "Follow Red Lane");
             while(!wall_close()){
                 getColor(color);
-                String left = "Left Color Sensor: " + (String)(color[1]);
-                String right = "Right Color Sensor: " + (String)(color[0]);
-                writeMessage(left);
-                writeMessage(right);
+                // String left = "Left Color Sensor: " + (String)(color[1]);
+                // String right = "Right Color Sensor: " + (String)(color[0]);
+                // writeMessage(left);
+                // writeMessage(right);
                 if (color[0] == 0 && color[1] == 1){
                     turnLeftSmall();
                     moveSlow();
-                    delay(25);
+                    delay(15);
                 }
                 else if (color[0] == 1 && color[1] == 0){
                     turnRightSmall();
                     moveSlow();
-                    delay(25);
+                    delay(15);
                 }
                 else {
                     moveSlow();
@@ -407,7 +397,7 @@ void loop() {
                     delay(25);
                 }
                 else {
-                    moveForward();
+                    moveMedium();
                 }
             }
             motorsStop();
@@ -472,7 +462,7 @@ void loop() {
                     delay(25);
                 }
                 else {
-                    moveForward();
+                    moveMedium();
                 }
             }
             motorsStop();
@@ -491,10 +481,31 @@ void loop() {
         }
         motorsStop();
         lcdShowStatus("Finished", "Task complete");
-        //writeMessage("returned");
+        // writeMessage("returned");
+
         writeMessage("RIDJ 5");
-        delay(500);
-        currentState = finish;
+        String msg = readMessage();
+        int msgSize = msg.length();
+        if (msgSize > 0) {
+          //Serial.println("Received message: " + msg);
+          int pos = msg.indexOf('.');
+          if (pos != -1) {
+            String stateStr = msg.substring(pos + 1);
+            if (stateStr.startsWith("MACJ")) {
+              stateStr = stateStr.substring(5);
+              int stateNum = stateStr.toInt();
+              currentState = (State) stateNum;
+              // stateStr.trim();
+              // if (stateStr.equals("red lane found")){ 
+              //   changeState(state1_crossing);
+              // }
+            }
+          }
+        }
+        else {
+            currentState = finish;
+            delay(500);
+        }
         break;
     }  
     case idle_duo: {

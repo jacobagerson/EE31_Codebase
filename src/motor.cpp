@@ -71,6 +71,18 @@ void moveForward(){
     analogWrite(9, 100); //Set speed
 }
 
+void moveMedium(){
+    //left forward
+    digitalWrite(4, HIGH); //Set enable high
+    digitalWrite(6, LOW); //Set reference low
+    analogWrite(5, 75);
+
+    //right forward
+    digitalWrite(8, HIGH); //Set enable high
+    digitalWrite(10, LOW); //Set reference low
+    analogWrite(9, 75); //Set speed
+}
+
 
 void moveSlow(){
     //left forward
@@ -151,7 +163,7 @@ void turnLSmall(){
     setLSpeed(100);
     rightMotorForward();
     leftMotorBackward();
-    delay(180);
+    delay(240);
     motorsStop();
 }
 
