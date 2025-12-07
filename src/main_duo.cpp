@@ -237,7 +237,7 @@ void loop() {
             moveBackward();
             delay(200);
             motorsStop();
-            turnLSmall();
+            turnL90();
             delay(200);
             currentState = followRed;
             break;
@@ -407,7 +407,7 @@ void loop() {
                     delay(25);
                 }
                 else {
-                    moveSlow();
+                    moveForward();
                 }
             }
             motorsStop();
@@ -472,7 +472,7 @@ void loop() {
                     delay(25);
                 }
                 else {
-                    moveSlow();
+                    moveForward();
                 }
             }
             motorsStop();
@@ -493,7 +493,8 @@ void loop() {
         lcdShowStatus("Finished", "Task complete");
         //writeMessage("returned");
         writeMessage("RIDJ 5");
-        currentState = idle;
+        delay(500);
+        currentState = finish;
         break;
     }  
     case idle_duo: {
