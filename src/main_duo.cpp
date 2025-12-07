@@ -495,16 +495,27 @@ void loop() {
         writeMessage("RIDJ 5");
         currentState = idle;
         break;
-    }     
+    }  
     case idle_duo: {
-        num_duo = communicate_duo();
-        //writeMessage("Duo state received: " + String(num_duo));
-        if(num_duo != 8 || num_duo!= 2 || num_duo != 14 || num_duo == -1){
-            currentState = idle_duo; 
-        } else {
-            writeMessage("Duo changing state to: " + String(num_duo));
-            currentState = (State) num_duo; 
+        String msg = readMessage();
+        int msgSize = msg.length();
+        if (msgSize > 0) {
+          //Serial.println("Received message: " + msg);
+          int pos = msg.indexOf('.');
+          if (pos != -1) {
+            String stateStr = msg.substring(pos + 1);
+            if (stateStr.startsWith("MACJ")) {
+              stateStr = stateStr.substring(5);
+              int stateNum = stateStr.toInt();
+              currentState = (State) stateNum;
+              // stateStr.trim();
+              // if (stateStr.equals("red lane found")){ 
+              //   changeState(state1_crossing);
+              // }
+            }
+          }
         }
+        else currentState = idle_duo;
         motorsStop();
         lcdShowStatus("Idle Duo", "Waiting...");
         break;

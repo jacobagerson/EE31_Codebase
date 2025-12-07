@@ -72,3 +72,7 @@ String getMessage(String message){
     message.remove(0,1);
     return message;
 }
+
+int parseMessage(){
+    return client.parseMessage();
+}
