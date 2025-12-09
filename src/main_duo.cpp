@@ -17,9 +17,7 @@ typedef enum {
     laneFOLLOW_Y,
     findSTART, 
     finish,
-    idle_duo //14
 } State;
-
 
 State currentState = idle;
 
@@ -109,7 +107,7 @@ void loop() {
     // writeMessage(right);
     // delay(50);
 
-    // reads values below
+    // // reads values below
     // int a_amb, b_amb, a_red, b_red, a_blue, b_blue;
 
     // digitalWrite(13, HIGH); delay(25);
@@ -133,7 +131,7 @@ void loop() {
     // writeMessage("Sensor A Angle: " + String(a_angle));
     // writeMessage("Sensor B Angle: " + String(b_angle));
 
-    // Serial.println(ir_read());
+    // writeMessage((String)ir_read());
     // delay(200);
 
     // writeMessage("IR Read: " + String(ir_read()));
@@ -151,10 +149,26 @@ void loop() {
     switch (currentState) {
     case idle:
     {
-        num = communicate();
-        if(num == -1){
-            currentState = idle; 
-        } else currentState = (State) num; 
+        String msg = readMessage();
+        int msgSize = msg.length();
+        if (msgSize > 0) {
+          //Serial.println("Received message: " + msg);
+          int pos = msg.indexOf('.');
+          if (pos != -1) {
+            String stateStr = msg.substring(pos + 1);
+            //Serial.println(stateStr);
+            if (stateStr.startsWith("MACJ")) {
+              stateStr = stateStr.substring(5);
+              int stateNum = stateStr.toInt();
+              currentState = (State) stateNum;
+              // stateStr.trim();
+              // if (stateStr.equals("red lane found")){ 
+              //   changeState(state1_crossing);
+              // }
+            }
+          }
+        }
+        else currentState = idle;
         motorsStop();
         lcdShowStatus("Idle", "Waiting...");
         break;
@@ -383,7 +397,7 @@ void loop() {
             turnL90();
             delay(200);
             //DELAY UNTIL BOT 2 sends signal to follow yellow B
-            currentState = idle_duo;
+            currentState = idle;
             break;
         }
     case followYellow_R:
@@ -448,10 +462,9 @@ void loop() {
             //motorsStop();
             turnR90();
             delay(200);
-            currentState = followYellow_B;
+            currentState = idle;
             break;
         }
-
     case followYellow_B:
         {            
             lcdShowStatus("Follow Yellow", "");
@@ -480,7 +493,7 @@ void loop() {
             moveBackward();
             delay(100);
             motorsStop();
-            turnR90();
+            turnR90Y();
             delay(200);
             currentState = finish;
             break;
@@ -518,30 +531,6 @@ void loop() {
         }
         break;
     }  
-    case idle_duo: {
-        String msg = readMessage();
-        int msgSize = msg.length();
-        if (msgSize > 0) {
-          //Serial.println("Received message: " + msg);
-          int pos = msg.indexOf('.');
-          if (pos != -1) {
-            String stateStr = msg.substring(pos + 1);
-            if (stateStr.startsWith("MACJ")) {
-              stateStr = stateStr.substring(5);
-              int stateNum = stateStr.toInt();
-              currentState = (State) stateNum;
-              // stateStr.trim();
-              // if (stateStr.equals("red lane found")){ 
-              //   changeState(state1_crossing);
-              // }
-            }
-          }
-        }
-        else currentState = idle_duo;
-        motorsStop();
-        lcdShowStatus("Idle Duo", "Waiting...");
-        break;
-    }
     default:
         currentState = idle;
         break;
