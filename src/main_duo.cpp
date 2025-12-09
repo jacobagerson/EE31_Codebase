@@ -1,9 +1,22 @@
+/**
+ * main_duo.cpp
+ * Written by Cooper Bailey, Asher Milberg, Jacob Gerson, and Mason Doshi
+ * 
+ * Main control program for the dual-robot (duo bot) system.
+ * 
+ * This file contains the primary state-machine logic used to run both
+ * robots in the duo configuration. The same codebase is used for both
+ * Bot 1 and Bot 2; the only modification required for Bot 2 is to
+ * comment out line 449.
+ */
+
+
 #include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include "main.h"
 
 typedef enum { 
-    idle, 
+    idle,  //0
     firstWALL_R,
     firstWALL_B, //2
     findRed,
@@ -13,9 +26,7 @@ typedef enum {
     findYellow_R,
     followYellow_R,
     findYellow_B,
-    followYellow_B,
-    laneFOLLOW_Y,
-    findSTART, 
+    followYellow_B, //10 
     finish,
 } State;
 
@@ -36,15 +47,8 @@ void lcdShowStatus(const char* line1, const char* line2 = "") {
     }
 }
 
-void blink(int pin, int num){
-    for(int i = 0; i < num; i++){
-        digitalWrite(pin, HIGH);
-        delay(500);
-        digitalWrite(pin, LOW);
-        delay(500);
-    }
-}
-
+//Set up all the pins and connect our bot to the websocket
+//writes a message to the websocket saying it is done and switches to the idle state
 void setup() {
 	//initialize serial monitor
     Serial.begin(9600);
@@ -57,114 +61,38 @@ void setup() {
     lcd.init();       // initialize the lcd
     lcd.backlight();  // open the backlight
     lcdShowStatus("Booting...", "Please wait");
-
-	//start websocket up
+    //Connect to Websocket
     setupSocket();
-    //delay(2500);
     writeMessage("Done with setup.");
     lcdShowStatus("Setup Complete", "Ready To Start");
-    //delay(500);
-    //lcdShowStatus("Idle", "Waiting...");
 }
 
-int communicate() {
-    String message = readMessage();
-    int state = -1;
-    if (message.length() > 0 && parseID(message) == "8050D1451904") {
-        String stateStr = getMessage(message);
-        state = stateStr.toInt();
-    }  
-    return state;
-}
-
-int communicate_duo() {
-    String message = readMessage();
-    // writeMessage((message));
-    // writeMessage("Duo communicate received: " + message);
-    int state = -1;
-    writeMessage(parseID(message));
-    if (message.length() > 0 && parseID(message) == "89C87865077A") {
-        String stateStr = getMessage(message);
-        state = stateStr.toInt();
-    }
-    return state; 
-}
 
 
 void loop() {
     int num = 0;
-    int num_duo = 0;
     int color[2] = {0};
-
-    // // to get a color just do: getColor(color);
-    // // color[0] = right sensor, color[1] = left sensor
-
-    // // //Serial.println(ir_read());  
-    // getColor(color);
-    // String left = "Left Color Sensor: " + (String)(color[1]);
-    // String right = "Right Color Sensor: " + (String)(color[0]);
-    // writeMessage(left);
-    // writeMessage(right);
-    // delay(50);
-
-    // // reads values below
-    // int a_amb, b_amb, a_red, b_red, a_blue, b_blue;
-
-    // digitalWrite(13, HIGH); delay(25);
-    // a_amb = analogRead(A0);
-    // b_amb = analogRead(A1);
-
-    // digitalWrite(7, HIGH); delay(25);
-    // a_red = analogRead(A0) - a_amb;
-    // b_red = analogRead(A1) - b_amb;
-    // digitalWrite(7, LOW);
-
-    // digitalWrite(12, HIGH); delay(25);
-    // a_blue = analogRead(A0) - a_amb;
-    // b_blue = analogRead(A1) - b_amb;
-    // digitalWrite(12, LOW);
-    // digitalWrite(13, LOW);
-
-    // float a_angle = atan2f((float)a_blue, (float)a_red)*(180/PI);
-    // float b_angle = atan2f((float)b_blue, (float)b_red)*(180/PI);
-
-    // writeMessage("Sensor A Angle: " + String(a_angle));
-    // writeMessage("Sensor B Angle: " + String(b_angle));
-
-    // writeMessage((String)ir_read());
-    // delay(200);
-
-    // writeMessage("IR Read: " + String(ir_read()));
-
-
-    // // debugging print 
-    // // Serial.print("Sensor A:"); Serial.print(a_amb); Serial.print(", "); Serial.print(a_red); Serial.print(", "); Serial.println(a_blue); 
-    // // Serial.print("Sensor B:"); Serial.print(b_amb); Serial.print(", "); Serial.print(b_red); Serial.print(", "); Serial.println(b_blue); 
-        
-
-    // calculates the angles of the vector created by 
-    // // the sensor reads
-
-
     switch (currentState) {
+        // ============================
+    // IDLE STATE
+    // - Stops all motors
+    // - Displays "Idle - Waiting..." on the LCD
+    // - Listens for incoming WebSocket messages
+    // - Parses MACJ command for new state
+    // - Transitions to new state if valid command is received
+    // ============================
     case idle:
     {
         String msg = readMessage();
         int msgSize = msg.length();
         if (msgSize > 0) {
-          //Serial.println("Received message: " + msg);
           int pos = msg.indexOf('.');
           if (pos != -1) {
             String stateStr = msg.substring(pos + 1);
-            //Serial.println(stateStr);
             if (stateStr.startsWith("MACJ")) {
               stateStr = stateStr.substring(5);
               int stateNum = stateStr.toInt();
               currentState = (State) stateNum;
-              // stateStr.trim();
-              // if (stateStr.equals("red lane found")){ 
-              //   changeState(state1_crossing);
-              // }
             }
           }
         }
@@ -173,18 +101,21 @@ void loop() {
         lcdShowStatus("Idle", "Waiting...");
         break;
     }
+    // ============================
+    // FIRST WALL (RED BOT)
+    // - Drives forward until the wall is detected
+    // - Sends IR sensor reading and wall hit message
+    // - Backs up slightly after contact
+    // - Turns left 180 degrees
+    // - Transitions to findRed
+    // ============================
     case firstWALL_R:
         {
-            num = communicate();
-            if(num == -1){
-                currentState = firstWALL_R; 
-            } else currentState = (State) num; 
             motorsStop();
             delay(500);
             lcdShowStatus("firstWALL", "Moving to wall");
             while(!wall_close()){
                 moveForward();
-                //writeMessage((String)ir_read());
             }
             writeMessage(String(ir_read()));
             motorsStop();
@@ -194,12 +125,19 @@ void loop() {
             moveBackward();
             delay(200);
             motorsStop();
-            //Serial.println(getMessage(readMessage()));
             turnL180();
             delay(200);
             currentState = findRed;
             break;
         }
+    // ============================
+    // FIRST WALL (BLUE BOT)
+    // - Drives forward until the wall is detected
+    // - Backs up after contact
+    // - Sends wall hit message
+    // - Turns right 180 degrees
+    // - Transitions to findBlue
+    // ============================
     case firstWALL_B: {
             motorsStop();
             delay(500);
@@ -212,18 +150,22 @@ void loop() {
             delay(200);
             writeMessage("Hit first wall.");
             lcdShowStatus("firstWALL", "Hit first wall");
-            //Serial.println(getMessage(readMessage()));
             turnR180();
             delay(200);
             currentState = findBlue;
             break;
     }
+    // ============================
+    // FIND RED LANE
+    // - Moves forward into lane region
+    // - Rotates slowly until both color sensors detect red
+    // - Displays "Found Red" on LCD
+    // - Sends WebSocket confirmation
+    // - Backs up and aligns with lane
+    // - Transitions to followRed
+    // ============================
     case findRed: 
         {
-            num = communicate();
-            if(num == -1){
-                currentState = findRed; 
-            } else currentState = (State) num; 
             motorsStop();
             delay(500);
             moveForward();
@@ -232,18 +174,11 @@ void loop() {
             while(color[0] != 1 || color[1] != 1){
                 moveSlowR();
                 getColor(color);
-                // String left = "Left Color Sensor: " + (String)(color[1]);
-                // String right = "Right Color Sensor: " + (String)(color[0]);
-                // writeMessage(left);
-                // writeMessage(right);
                 lcdShowStatus("", "Finding Red");
-                //writeMessage((String)ir_read());
-                //lcdShowStatus("firstWALL", "Moving to wall");
             }
             motorsStop();
             delay(500);
             lcdShowStatus("", "Found Red");
-            //WRITE MESSAGE to OTHER bot saying to go
             writeMessage("red lane found");
             writeMessage("RIDJ 1");
             moveBackward();
@@ -256,16 +191,20 @@ void loop() {
             currentState = followRed;
             break;
         }
+    // ============================
+    // FOLLOW RED LANE
+    // - Follows red lane using dual color sensors
+    // - Makes left/right corrections based on color position
+    // - Continues until wall is detected
+    // - Backs up and turns left toward yellow
+    // - Transitions to findYellow_R
+    // ============================
     case followRed:
         {
             writeMessage("Following red lane.");
             lcdShowStatus("", "Follow Red Lane");
             while(!wall_close()){
                 getColor(color);
-                // String left = "Left Color Sensor: " + (String)(color[1]);
-                // String right = "Right Color Sensor: " + (String)(color[0]);
-                // writeMessage(left);
-                // writeMessage(right);
                 if (color[0] == 0 && color[1] == 1){
                     turnLeftSmall();
                     moveSlow();
@@ -290,18 +229,19 @@ void loop() {
 
                 turnL135();
                 currentState = findYellow_R;
-                // //go to the yellow line
-                // lcdShowStatus("Find Yellow", "Forward");
-                // currentState = findCOLOR_Y;
-                // break;
             }
             break;
         }
+    // ============================
+    // FIND BLUE LANE
+    // - Moves forward into lane region
+    // - Scans until both sensors detect blue
+    // - Displays "Found Blue" on LCD
+    // - Sends WebSocket confirmation
+    // - Turns right and aligns with lane
+    // - Transitions to followBlue
+    // ============================
     case findBlue:{
-            num = communicate();
-            if(num == -1){
-                currentState = findBlue; 
-            } else currentState = (State) num; 
             motorsStop();
             delay(500);
             moveForward();
@@ -311,16 +251,9 @@ void loop() {
             while(color[0] != 2 || color[1] != 2){
                 moveSlow();
                 getColor(color);
-                // String left = "Left Color Sensor: " + (String)(color[1]);
-                // String right = "Right Color Sensor: " + (String)(color[0]);
-                // writeMessage(left);
-                // writeMessage(right);
-                //writeMessage((String)ir_read());
-                //lcdShowStatus("firstWALL", "Moving to wall");
             }
             motorsStop();
             delay(500);
-            //WRITE MESSAGE THAT WE ARE ON BLUE LANE
             writeMessage("blue lane found");
             writeMessage("RIDJ 5");
             lcdShowStatus("", "Found Blue");
@@ -332,16 +265,20 @@ void loop() {
             currentState = followBlue;
             break;
     }
+    // ============================
+    // FOLLOW BLUE LANE
+    // - Follows blue lane using dual color sensors
+    // - Makes left/right corrections based on color position
+    // - Continues until wall is detected
+    // - Backs up and turns right toward yellow
+    // - Transitions to findYellow_B
+    // ============================
     case followBlue:
         {
             lcdShowStatus("Lane Follow", "Follow Blue");
             writeMessage("Following blue lane.");
             while(!wall_close()){
                 getColor(color);
-                // String left = "Left Color Sensor: " + (String)(color[1]);
-                // String right = "Right Color Sensor: " + (String)(color[0]);
-                // writeMessage(left);
-                // writeMessage(right);
                 if (color[0] == 0 && color[1] == 2){
                     turnLeftSmall();
                     moveSlow();
@@ -369,47 +306,45 @@ void loop() {
             }
             break;
         }
+    // ============================
+    // FIND YELLOW (FROM RED PATH)
+    // - Scans for yellow strip
+    // - Moves slowly until both sensors detect yellow
+    // - Sends confirmation message
+    // - Turns left 90 degrees
+    // - Returns to idle
+    // ============================
     case findYellow_R:
         {
-            num = communicate();
-            if(num == -1){
-                currentState = findYellow_R; 
-            } else currentState = (State) num; 
             lcdShowStatus("Find Yellow", "");
             getColor(color);
             while(color[0] != 3 || color[1] != 3){
                 moveSlow();
                 getColor(color);
-                // String left = "Left Color Sensor: " + (String)(color[1]);
-                // String right = "Right Color Sensor: " + (String)(color[0]);
-                // writeMessage(left);
-                // writeMessage(right);
-                //writeMessage((String)ir_read());
-                //lcdShowStatus("firstWALL", "Moving to wall");
             }
             motorsStop();
             delay(500);
             writeMessage("Hit yellow strip.");
             lcdShowStatus("","Hit Yellow");
-            //moveBackward();
-            //delay(200);
-            //motorsStop();
             turnL90();
             delay(200);
-            //DELAY UNTIL BOT 2 sends signal to follow yellow B
             currentState = idle;
             break;
         }
+    // ============================
+    // FOLLOW YELLOW (FROM RED PATH)
+    // - Follows yellow lane using color sensors
+    // - Makes left/right corrections
+    // - Continues until wall is detected
+    // - Backs up and turns left 90 degrees
+    // - Transitions to finish
+    // ============================
     case followYellow_R:
         {            
             writeMessage("Follow yellow");
             lcdShowStatus("Follow Yellow", "");
             while(!wall_close()){
                 getColor(color);
-                // String left = "Left Color Sensor: " + (String)(color[1]);
-                // String right = "Right Color Sensor: " + (String)(color[0]);
-                // writeMessage(left);
-                // writeMessage(right);
                 if (color[0] == 0 && color[1] == 3){
                     turnLeftSmall();
                     moveSlow();
@@ -435,45 +370,44 @@ void loop() {
             currentState = finish;
             break;
         }
+    // ============================
+    // FIND YELLOW (FROM BLUE PATH)
+    // - Scans for yellow strip
+    // - Moves slowly until both sensors detect yellow
+    // - Sends confirmation message
+    // - Turns right 90 degrees
+    // - Returns to idle
+    // ============================
     case findYellow_B:
         {
-            num = communicate();
-            if(num == -1){
-                currentState = findYellow_B; 
-            } else currentState = (State) num; 
             lcdShowStatus("Find Yellow", "");
             getColor(color);
             while(color[0] != 3 || color[1] != 3){
                 moveSlow();
                 getColor(color);
-                // String left = "Left Color Sensor: " + (String)(color[1]);
-                // String right = "Right Color Sensor: " + (String)(color[0]);
-                // writeMessage(left);
-                // writeMessage(right);
-                //writeMessage((String)ir_read());
-                //lcdShowStatus("firstWALL", "Moving to wall");
             }
             motorsStop();
             delay(500);
             writeMessage("Hit yellow strip.");
             lcdShowStatus("","Hit Yellow");
-            //moveBackward();
-            //delay(200);
-            //motorsStop();
             turnR90();
             delay(200);
             currentState = idle;
             break;
         }
+    // ============================
+    // FOLLOW YELLOW (FROM BLUE PATH)
+    // - Follows yellow lane using color sensors
+    // - Makes left/right corrections
+    // - Continues until wall is detected
+    // - Backs up and turns right 90 degrees
+    // - Transitions to finish
+    // ============================
     case followYellow_B:
         {            
             lcdShowStatus("Follow Yellow", "");
             while(!wall_close()){
                 getColor(color);
-                // String left = "Left Color Sensor: " + (String)(color[1]);
-                // String right = "Right Color Sensor: " + (String)(color[0]);
-                // writeMessage(left);
-                // writeMessage(right);
                 if (color[0] == 0 && color[1] == 3){
                     turnLeftSmall();
                     moveSlow();
@@ -498,19 +432,24 @@ void loop() {
             currentState = finish;
             break;
         }
+    // ============================
+    // FINISH STATE
+    // - Drives forward until final wall is detected
+    // - Stops all motors
+    // - Displays "Finished - Task Complete"
+    // - Sends completion message
+    // - Waits for new MACJ command to restart
+    // ============================
     case finish:{
         while(!wall_close()){
             moveForward();
         }
         motorsStop();
         lcdShowStatus("Finished", "Task complete");
-        // writeMessage("returned");
-
         writeMessage("RIDJ 5");
         String msg = readMessage();
         int msgSize = msg.length();
         if (msgSize > 0) {
-          //Serial.println("Received message: " + msg);
           int pos = msg.indexOf('.');
           if (pos != -1) {
             String stateStr = msg.substring(pos + 1);
@@ -518,10 +457,6 @@ void loop() {
               stateStr = stateStr.substring(5);
               int stateNum = stateStr.toInt();
               currentState = (State) stateNum;
-              // stateStr.trim();
-              // if (stateStr.equals("red lane found")){ 
-              //   changeState(state1_crossing);
-              // }
             }
           }
         }
@@ -531,6 +466,7 @@ void loop() {
         }
         break;
     }  
+
     default:
         currentState = idle;
         break;

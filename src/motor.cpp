@@ -120,6 +120,7 @@ void moveBackward(){
     analogWrite(9, 255 - 100); //Set speed
 }
 
+//Set Speed of Motors (0-255)
 void setLSpeed(uint8_t speed){
     l_speed = speed; 
 }

@@ -17,12 +17,10 @@ void setUpColorPins() {
 
 }
 
-
 void getColor(int color[2]) {
     int a_amb, b_amb, a_red, b_red, a_blue, b_blue;
 
     // reads values below
-
     digitalWrite(13, HIGH); 
     delay(25);
     a_amb = analogRead(A0);
@@ -39,22 +37,12 @@ void getColor(int color[2]) {
     a_blue = analogRead(A0) - a_amb;
     b_blue = analogRead(A1) - b_amb;
     digitalWrite(12, LOW);
-    digitalWrite(13, LOW);
-
-    // debugging print 
-    // Serial.print("Sensor A:"); Serial.print(a_amb); Serial.print(", "); Serial.print(a_red); Serial.print(", "); Serial.println(a_blue); 
-    // Serial.print("Sensor B:"); Serial.print(b_amb); Serial.print(", "); Serial.print(b_red); Serial.print(", "); Serial.println(b_blue); 
-        
+    digitalWrite(13, LOW);        
 
     // calculates the angles of the vector created by 
     // the sensor reads
     float a_angle = atan2f((float)a_blue, (float)a_red)*(180/PI);
     float b_angle = atan2f((float)b_blue, (float)b_red)*(180/PI);
-
-    //debugging print output values in degrees
-    // Serial.print("Red values: "); Serial.print(a_amb); Serial.print(", "); Serial.println(b_amb);
-    // Serial.print("Sensor A: "); Serial.println(a_angle);
-    // Serial.print("Sensor B: "); Serial.println(b_angle);
 
 
     // takes the difference between teh measured angle
@@ -62,9 +50,7 @@ void getColor(int color[2]) {
     for (int i = 0; i < 4; i++) {
         a_mag[i] = fabs(a_angle - a_lane[i]);
         b_mag[i] = fabs(b_angle - b_lane[i]); 
-        // Serial.print(a_angle); Serial.print(", ");Serial.println(a_lane[i]);
     }
-
 
     // finds the minimal difference of angles
     a_bestLane = 0; a_bestValue = a_mag[0];
@@ -76,10 +62,4 @@ void getColor(int color[2]) {
 
     color[0] = a_bestLane; // 0=Black,1=Red,2=Blue,3=Yellow
     color[1] = b_bestLane;
-
-    // //Color sensor values: 
-    // Serial.print("Right Color Sensor: "); 
-    // Serial.println(color[0]);
-    // Serial.print("Left Color Sensor: "); 
-    // Serial.println(color[1]);
 }

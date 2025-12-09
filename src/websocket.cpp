@@ -1,18 +1,16 @@
 #include "websocket.h"
-char ssid[] = "tufts_eecs";
-char pass[] = "foundedin1883";
+char ssid[] = "YOUR SSID"; 
+char pass[] = "YOUR WIFI PASSWORD";
 
-char serverAddress[] = "35.239.140.61"; // server address
+char serverAddress[] = "YOUR SERVER ADDRESS"; // server address
 int port = 8080;
 WiFiClient wifi;
 WebSocketClient client = WebSocketClient(wifi, serverAddress, port);
-String clientID = "8050D1451904"; //Insert your Server ID Here!
-String clientID_RIDGE = "89C87865077A"; //Insert your Server ID Here!
+String clientID = "YOUR ID"; //Insert your Server ID Here!
 int status = WL_IDLE_STATUS;
 int count = 0;
 
 void setupSocket(){
-    
     while ( status != WL_CONNECTED) {
         Serial.print("Attempting to connect to Network named: ");
         Serial.println(ssid); // print the network name (SSID);
@@ -45,7 +43,6 @@ void writeMessage(String message){
         client.print(message);
         client.endMessage();
     }
-    //Serial.println(message);
 }
 
 String readMessage(){
