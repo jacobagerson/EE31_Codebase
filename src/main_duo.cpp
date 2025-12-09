@@ -149,6 +149,16 @@ void loop() {
 
 
     switch (currentState) {
+    case idle:
+    {
+        num = communicate();
+        if(num == -1){
+            currentState = idle; 
+        } else currentState = (State) num; 
+        motorsStop();
+        lcdShowStatus("Idle", "Waiting...");
+        break;
+    }
     case firstWALL_R:
         {
             num = communicate();
@@ -389,12 +399,12 @@ void loop() {
                 if (color[0] == 0 && color[1] == 3){
                     turnLeftSmall();
                     moveSlow();
-                    delay(25);
+                    delay(15);
                 }
                 else if (color[0] == 3 && color[1] == 0){
                     turnRightSmall();
                     moveSlow();
-                    delay(25);
+                    delay(15);
                 }
                 else {
                     moveMedium();
@@ -530,16 +540,6 @@ void loop() {
         else currentState = idle_duo;
         motorsStop();
         lcdShowStatus("Idle Duo", "Waiting...");
-        break;
-    }
-    case idle:
-    {
-        num = communicate();
-        if(num == -1){
-            currentState = idle; 
-        } else currentState = (State) num; 
-        motorsStop();
-        lcdShowStatus("Idle", "Waiting...");
         break;
     }
     default:
